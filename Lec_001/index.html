@@ -1,0 +1,1080 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Introduction to Machine Learning Methods</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-core.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/autoloader/prism-autoloader.min.js"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="presentation-container">
+        <!-- Navigation -->
+        <div class="navigation">
+            <button class="nav-btn" id="prevBtn">❮ Previous</button>
+            <span class="slide-counter" id="slideCounter">1 / 45</span>
+            <button class="nav-btn" id="nextBtn">Next ❯</button>
+        </div>
+
+        <!-- Progress Bar -->
+        <div class="progress-container">
+            <div class="progress-bar" id="progressBar"></div>
+        </div>
+
+        <!-- Slides Container -->
+        <div class="slides-container" id="slidesContainer">
+            
+            <!-- Slide 1: Title -->
+            <div class="slide active" data-slide="1">
+                <div class="slide-content title-slide">
+                    <h1>Introduction to Machine Learning Methods</h1>
+                    <div class="subtitle">
+                        <p>A Comprehensive 2-Hour Lecture</p>
+                        <p class="course-info">Understanding Data-Driven Decision Making</p>
+                    </div>
+                    <div class="author-info">
+                        <p>Machine Learning Fundamentals Course</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Slide 2: Table of Contents -->
+            <div class="slide" data-slide="2">
+                <div class="slide-content">
+                    <h2>Table of Contents</h2>
+                    <div class="toc-grid">
+                        <div class="toc-section">
+                            <h3>Part I: Foundations</h3>
+                            <ul>
+                                <li>What is Machine Learning?</li>
+                                <li>What Can We Do With It?</li>
+                                <li>The Language of ML</li>
+                            </ul>
+                        </div>
+                        <div class="toc-section">
+                            <h3>Part II: Supervised Learning</h3>
+                            <ul>
+                                <li>Learning from Examples</li>
+                                <li>Train and Test Sets</li>
+                                <li>Classification vs Regression</li>
+                            </ul>
+                        </div>
+                        <div class="toc-section">
+                            <h3>Part III: Advanced Topics</h3>
+                            <ul>
+                                <li>Unsupervised Learning</li>
+                                <li>ML vs Traditional Inference</li>
+                                <li>Practical Considerations</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Slide 3: What is Machine Learning? -->
+            <div class="slide" data-slide="3">
+                <div class="slide-content">
+                    <h2>What is Machine Learning?</h2>
+                    <div class="definition-box">
+                        <p class="definition">Teaching machines to make informed, <strong>data-driven decisions</strong></p>
+                    </div>
+                    <div class="content-grid">
+                        <div class="text-content">
+                            <h3>Key Capabilities:</h3>
+                            <ul class="animated-list">
+                                <li>Recognizing and characterizing objects</li>
+                                <li>Detecting patterns in data</li>
+                                <li>Distinguishing signal from noise</li>
+                                <li>Making predictions based on similarities</li>
+                            </ul>
+                        </div>
+                        <div class="image-content">
+                            <img src="https://pplx-res.cloudinary.com/image/upload/v1754681908/pplx_project_search_images/6c749d15d1a6a038a6218c54dc4d33d110676936.png" alt="ML Pipeline" class="slide-image">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Slide 4: Real-World Examples -->
+            <div class="slide" data-slide="4">
+                <div class="slide-content">
+                    <h2>Machine Learning in Action</h2>
+                    <div class="examples-grid">
+                        <div class="example-card">
+                            <h3>🚗 Self-Driving Cars</h3>
+                            <p>Complex decision-making combining multiple ML methods</p>
+                        </div>
+                        <div class="example-card">
+                            <h3>🎮 AI Gaming</h3>
+                            <p>Learning strategies through trial and reinforcement</p>
+                        </div>
+                        <div class="example-card">
+                            <h3>📱 Social Media</h3>
+                            <p>Face recognition and content recommendation</p>
+                        </div>
+                        <div class="example-card">
+                            <h3>🏥 Medical Diagnosis</h3>
+                            <p>Pattern recognition in medical imaging</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Slide 5: What Can We Do With It? -->
+            <div class="slide" data-slide="5">
+                <div class="slide-content">
+                    <h2>Four Main Types of ML Problems</h2>
+                    <div class="problem-types">
+                        <div class="problem-type">
+                            <h3>1. Recognition</h3>
+                            <p>Correctly labeling different types of objects</p>
+                            <div class="examples">Examples: Cat vs Dog classification, Person identification</div>
+                        </div>
+                        <div class="problem-type">
+                            <h3>2. Prediction</h3>
+                            <p>Forecasting future behavior based on past data</p>
+                            <div class="examples">Examples: Stock prices, Weather forecasting, Utility bills</div>
+                        </div>
+                        <div class="problem-type">
+                            <h3>3. Grouping (Clustering)</h3>
+                            <p>Finding similar objects and identifying outliers</p>
+                            <div class="examples">Examples: Galaxy classification, Customer segmentation</div>
+                        </div>
+                        <div class="problem-type">
+                            <h3>4. Simplification</h3>
+                            <p>Reducing complexity while preserving essential information</p>
+                            <div class="examples">Examples: Data compression, Feature extraction</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Slide 6: The Language of Machine Learning -->
+            <div class="slide" data-slide="6">
+                <div class="slide-content">
+                    <h2>The Language of Machine Learning</h2>
+                    <p class="intro-text">Learning to talk about ML is the first rule of machine learning!</p>
+                    <div class="terminology-grid">
+                        <div class="term-card">
+                            <h3>Instances</h3>
+                            <p>Elements of a dataset</p>
+                            <small>Also called: samples, examples, observations</small>
+                        </div>
+                        <div class="term-card">
+                            <h3>Features</h3>
+                            <p>Properties that can be measured</p>
+                            <small>The "input" - what we know about each instance</small>
+                        </div>
+                        <div class="term-card">
+                            <h3>Targets</h3>
+                            <p>Properties we want to predict</p>
+                            <small>Also called: labels, output</small>
+                        </div>
+                        <div class="term-card">
+                            <h3>Models</h3>
+                            <p>Mathematical objects mapping input to output</p>
+                            <small>Built using algorithms and methods</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Slide 7: Features Example -->
+            <div class="slide" data-slide="7">
+                <div class="slide-content">
+                    <h2>Example: Physics Problem</h2>
+                    <div class="physics-example">
+                        <h3>Dynamics Problem</h3>
+                        <div class="example-box">
+                            <p><strong>Features:</strong> Distance and Time</p>
+                            <p><strong>Target:</strong> Final Speed</p>
+                        </div>
+                        <div class="feature-types">
+                            <h4>Feature Types:</h4>
+                            <ul>
+                                <li><strong>Numerical:</strong> 5.2, 100, -3.14</li>
+                                <li><strong>Categorical:</strong> Yes/No, Red/Blue/Green, Low/Medium/High</li>
+                                <li><strong>Binary:</strong> 0/1, True/False</li>
+                            </ul>
+                            <div class="note">
+                                <strong>Note:</strong> Categorical features usually need to be mapped to numerical values before ML processing
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Slide 8: Data Organization -->
+            <div class="slide" data-slide="8">
+                <div class="slide-content">
+                    <h2>Data Organization</h2>
+                    <div class="data-structure">
+                        <h3>Standard Format: Rows and Columns</h3>
+                        <div class="data-table">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>Instance</th>
+                                        <th>Feature 1</th>
+                                        <th>Feature 2</th>
+                                        <th>Feature 3</th>
+                                        <th>Target</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>1</td>
+                                        <td>5.2</td>
+                                        <td>Blue</td>
+                                        <td>High</td>
+                                        <td>A</td>
+                                    </tr>
+                                    <tr>
+                                        <td>2</td>
+                                        <td>3.1</td>
+                                        <td>Red</td>
+                                        <td>Medium</td>
+                                        <td>B</td>
+                                    </tr>
+                                    <tr>
+                                        <td>3</td>
+                                        <td>7.8</td>
+                                        <td>Green</td>
+                                        <td>Low</td>
+                                        <td>?</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <p class="formula"><strong>Dataset Size = </strong> Number of Instances × Number of Features</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Slide 9: Supervised vs Unsupervised -->
+            <div class="slide" data-slide="9">
+                <div class="slide-content">
+                    <h2>Supervised vs Unsupervised Learning</h2>
+                    <div class="comparison-image">
+                        <img src="https://pplx-res.cloudinary.com/image/upload/v1754677151/pplx_project_search_images/1b02e6b27d6b5d9b41eedf9c7c2aed54d2ec6f9c.png" alt="Supervised vs Unsupervised Learning" class="large-image">
+                    </div>
+                    <div class="comparison-text">
+                        <div class="supervised">
+                            <h3>Supervised Learning</h3>
+                            <p>Learning with a "teacher" - we have labeled examples</p>
+                        </div>
+                        <div class="unsupervised">
+                            <h3>Unsupervised Learning</h3>
+                            <p>Learning without labels - discovering hidden patterns</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Slide 10: Supervised Learning Introduction -->
+            <div class="slide" data-slide="10">
+                <div class="slide-content">
+                    <h2>Supervised Learning</h2>
+                    <div class="supervised-explanation">
+                        <div class="key-concept">
+                            <h3>Key Idea: Learning by Example</h3>
+                            <p>We have a collection of instances where both features AND targets are known</p>
+                        </div>
+                        <div class="learning-set-example">
+                            <h4>Example: Color Prediction</h4>
+                            <div class="color-example">
+                                <p>Given point coordinates (x, y), predict if the point is <span class="blue">blue</span> or <span class="green">green</span></p>
+                                <div class="learning-process">
+                                    <div class="step">1. Show algorithm examples with known colors</div>
+                                    <div class="step">2. Algorithm learns the relationship</div>
+                                    <div class="step">3. Make predictions on new points</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Slide 11: Learning Set Quality -->
+            <div class="slide" data-slide="11">
+                <div class="slide-content">
+                    <h2>Quality of Learning Sets</h2>
+                    <div class="learning-example">
+                        <h3>Can you guess the pattern?</h3>
+                        <div class="pattern-examples">
+                            <div class="example-set">
+                                <h4>First attempt:</h4>
+                                <table class="pattern-table">
+                                    <tr><th>Input</th><th>Output</th></tr>
+                                    <tr><td>1</td><td>3</td></tr>
+                                    <tr><td>2</td><td>3</td></tr>
+                                    <tr><td>3</td><td>?</td></tr>
+                                </table>
+                                <p>Most would guess: 3</p>
+                            </div>
+                            <div class="example-set">
+                                <h4>Better attempt:</h4>
+                                <table class="pattern-table">
+                                    <tr><th>Input</th><th>Output</th></tr>
+                                    <tr><td>one</td><td>3</td></tr>
+                                    <tr><td>two</td><td>3</td></tr>
+                                    <tr><td>three</td><td>5</td></tr>
+                                    <tr><td>four</td><td>4</td></tr>
+                                    <tr><td>five</td><td>?</td></tr>
+                                </table>
+                                <p class="answer">Answer: 4 (number of letters!)</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Slide 12: Train and Test Sets -->
+            <div class="slide" data-slide="12">
+                <div class="slide-content">
+                    <h2>Train and Test Sets</h2>
+                    <div class="scientific-method">
+                        <h3>Following the Scientific Method</h3>
+                        <div class="method-steps">
+                            <div class="step">
+                                <h4>1. Training (Hypothesis Formation)</h4>
+                                <p>Use part of data to build the model</p>
+                            </div>
+                            <div class="step">
+                                <h4>2. Testing (Hypothesis Testing)</h4>
+                                <p>Use remaining data to verify predictions</p>
+                            </div>
+                        </div>
+                        <div class="key-insight">
+                            <p><strong>Key Insight:</strong> We cannot verify predictions on the same data used for training!</p>
+                        </div>
+                    </div>
+                    <div class="split-visual">
+                        <div class="dataset-split">
+                            <div class="train-set">Training Set (70%)</div>
+                            <div class="test-set">Test Set (30%)</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Slide 13: Performance Metrics -->
+            <div class="slide" data-slide="13">
+                <div class="slide-content">
+                    <h2>Model Performance</h2>
+                    <div class="performance-types">
+                        <div class="metric-type">
+                            <h3>Training Performance</h3>
+                            <p>How well the model performs on training data</p>
+                            <div class="metrics">Training Error / Training Score</div>
+                        </div>
+                        <div class="metric-type">
+                            <h3>Test Performance</h3>
+                            <p>How well the model performs on test data</p>
+                            <div class="metrics">Test Error / Test Score</div>
+                        </div>
+                        <div class="metric-type">
+                            <h3>Generalization Performance</h3>
+                            <p>How well the model performs on completely new data</p>
+                            <div class="metrics">Generalization Error (estimated by test error)</div>
+                        </div>
+                    </div>
+                    <div class="warning-box">
+                        <h4>⚠️ Representative Learning Sets</h4>
+                        <p>Learning sets must be representative of the application domain, otherwise test error won't predict generalization error well!</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Slide 14: Classification vs Regression -->
+            <div class="slide" data-slide="14">
+                <div class="slide-content">
+                    <h2>Classification vs Regression</h2>
+                    <div class="comparison-visual">
+                        <img src="https://pplx-res.cloudinary.com/image/upload/v1754754563/pplx_project_search_images/7eb76994ede14cfdc6363fe8ebe2f528f24b4414.png" alt="Classification vs Regression" class="comparison-image">
+                    </div>
+                    <div class="comparison-details">
+                        <div class="classification-detail">
+                            <h3>Classification</h3>
+                            <ul>
+                                <li>Output: Discrete categories/classes</li>
+                                <li>Examples: Cat/Dog, Pass/Fail, Spam/Not Spam</li>
+                                <li>Evaluation: Count correct predictions</li>
+                                <li>Either 100% correct or 100% wrong</li>
+                            </ul>
+                        </div>
+                        <div class="regression-detail">
+                            <h3>Regression</h3>
+                            <ul>
+                                <li>Output: Continuous numerical values</li>
+                                <li>Examples: Price prediction, Temperature, Time</li>
+                                <li>Evaluation: Distance from correct value</li>
+                                <li>Can be "close" to correct answer</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Slide 15: Classification Example -->
+            <div class="slide" data-slide="15">
+                <div class="slide-content">
+                    <h2>Classification Example</h2>
+                    <div class="code-example">
+                        <h3>Fruit Classification</h3>
+                        <pre><code class="language-python">from sklearn.tree import DecisionTreeClassifier
+from sklearn.model_selection import train_test_split
+
+# Features: [height, width, weight, roundness]
+X = [[7, 3, 150, 0.8], [8, 3, 180, 0.9], [5, 5, 120, 0.7],
+     [4, 6, 100, 0.6], [6, 4, 140, 0.8], [3, 7, 90, 0.5]]
+
+# Target: Apple=0, Orange=1
+y = [0, 0, 0, 1, 1, 1]
+
+# Split and train
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.33)
+classifier = DecisionTreeClassifier()
+classifier.fit(X_train, y_train)
+
+# Predict
+predictions = classifier.predict(X_test)
+print(f"Predictions: {predictions}")  # [0, 1] = [Apple, Orange]</code></pre>
+                    </div>
+                    <div class="classification-note">
+                        <p><strong>Note:</strong> Classes are truly discrete - Apple is not "closer" to Orange than to Banana</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Slide 16: Regression Example -->
+            <div class="slide" data-slide="16">
+                <div class="slide-content">
+                    <h2>Regression Example: Car Movement</h2>
+                    <div class="regression-visual">
+                        <img src="https://ppl-ai-code-interpreter-files.s3.amazonaws.com/web/direct-files/b550bad56be1872419e51e4633b5544c/97fd3280-dda7-4084-9d73-648e1a7791e5/9daf37c9.png" alt="Linear Regression Example" class="chart-image">
+                    </div>
+                    <div class="code-example">
+                        <pre><code class="language-python">from sklearn.linear_model import LinearRegression
+import numpy as np
+
+# Time and Distance data
+X = np.array([[0], [1], [2], [3], [4], [5], [6], [7], [8], [9]])
+y = np.array([5.1, 5.5, 8.4, 11.1, 11.8, 14.4, 16.1, 19.5, 20.2, 23.1])
+
+# Split and train
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3)
+model = LinearRegression()
+model.fit(X_train, y_train)
+
+# Predict position at t=12
+prediction_12 = model.predict([[12]])
+print(f"Position at t=12s: {prediction_12[0]:.2f} meters")</code></pre>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Slide 17: Decision Tree Visualization -->
+            <div class="slide" data-slide="17">
+                <div class="slide-content">
+                    <h2>Decision Trees: Interpretable ML</h2>
+                    <div class="tree-visual">
+                        <img src="https://pplx-res.cloudinary.com/image/upload/v1754826604/pplx_project_search_images/b4b8530607613002cde09c7a48097feedd144100.png" alt="Decision Tree Example" class="tree-image">
+                    </div>
+                    <div class="tree-explanation">
+                        <h3>Why Decision Trees?</h3>
+                        <ul>
+                            <li>Easy to understand and interpret</li>
+                            <li>Shows decision-making process</li>
+                            <li>Works with both numerical and categorical features</li>
+                            <li>No need for feature scaling</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Slide 18: Unsupervised Learning Introduction -->
+            <div class="slide" data-slide="18">
+                <div class="slide-content">
+                    <h2>Unsupervised Learning</h2>
+                    <div class="unsupervised-intro">
+                        <div class="key-difference">
+                            <h3>Key Difference: No Labeled Examples</h3>
+                            <p>We're trying to discover patterns in data without knowing the "right" answers</p>
+                        </div>
+                        <div class="pattern-discovery">
+                            <h4>Target: Patterns, not specific quantities</h4>
+                            <div class="unsupervised-types">
+                                <div class="type">
+                                    <h4>🔍 Clustering</h4>
+                                    <p>Group similar objects together</p>
+                                </div>
+                                <div class="type">
+                                    <h4>📊 Dimensionality Reduction</h4>
+                                    <p>Simplify data while preserving information</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Slide 19: Clustering Example -->
+            <div class="slide" data-slide="19">
+                <div class="slide-content">
+                    <h2>Clustering Example</h2>
+                    <div class="clustering-visual">
+                        <img src="https://ppl-ai-code-interpreter-files.s3.amazonaws.com/web/direct-files/b550bad56be1872419e51e4633b5544c/c8934a0c-84e6-4d29-b92b-ed8a87aebf30/c5ab79c7.png" alt="Clustering Example" class="chart-image">
+                    </div>
+                    <div class="code-example">
+                        <h3>K-Means Clustering</h3>
+                        <pre><code class="language-python">from sklearn.cluster import KMeans
+import numpy as np
+
+# Unlabeled data points
+X = np.array([[1, 2], [2, 1], [2, 3], [8, 7], [8, 8], [9, 7]])
+
+# Create and fit clustering model
+kmeans = KMeans(n_clusters=2, random_state=42)
+kmeans.fit(X)
+
+# Get results
+cluster_labels = kmeans.labels_
+cluster_centers = kmeans.cluster_centers_
+
+print(f"Cluster labels: {cluster_labels}")
+print(f"Cluster centers: {cluster_centers}")</code></pre>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Slide 20: Real-World Clustering Applications -->
+            <div class="slide" data-slide="20">
+                <div class="slide-content">
+                    <h2>Clustering Applications</h2>
+                    <div class="applications-grid">
+                        <div class="application">
+                            <h3>👥 Friend Recognition</h3>
+                            <p>Group photos by people without knowing their names</p>
+                        </div>
+                        <div class="application">
+                            <h3>🦠 Disease Outbreaks</h3>
+                            <p>Identify outbreak centers and affected areas</p>
+                        </div>
+                        <div class="application">
+                            <h3>🌌 Galaxy Classification</h3>
+                            <p>Discover new types of galaxies from astronomical data</p>
+                        </div>
+                        <div class="application">
+                            <h3>🛒 Customer Segmentation</h3>
+                            <p>Group customers by behavior patterns</p>
+                        </div>
+                    </div>
+                    <div class="advantage-box">
+                        <h4>Advantages of Unsupervised Clustering:</h4>
+                        <ul>
+                            <li>No need for labeled training data</li>
+                            <li>Can discover unexpected patterns</li>
+                            <li>Data-driven classification schemes</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Slide 21: Dimensionality Reduction -->
+            <div class="slide" data-slide="21">
+                <div class="slide-content">
+                    <h2>Dimensionality Reduction</h2>
+                    <div class="dr-explanation">
+                        <h3>Goal: Simplification with Minimal Information Loss</h3>
+                        <div class="dr-approaches">
+                            <div class="approach">
+                                <h4>1. Feature Selection</h4>
+                                <p>Keep only the most meaningful original features</p>
+                            </div>
+                            <div class="approach">
+                                <h4>2. Feature Transformation</h4>
+                                <p>Map to new space where fewer components explain most variance</p>
+                            </div>
+                            <div class="approach">
+                                <h4>3. Manifold Learning</h4>
+                                <p>Learn nonlinear spaces preserving important relationships</p>
+                            </div>
+                        </div>
+                        <div class="benefits">
+                            <h4>Benefits:</h4>
+                            <ul>
+                                <li>Easier data visualization</li>
+                                <li>Reduced storage requirements</li>
+                                <li>Faster computation</li>
+                                <li>Better understanding of essential properties</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Slide 22: ML vs Traditional Inference -->
+            <div class="slide" data-slide="22">
+                <div class="slide-content">
+                    <h2>Machine Learning vs Traditional Inference</h2>
+                    <div class="approach-comparison">
+                        <div class="traditional-approach">
+                            <h3>Traditional Inference</h3>
+                            <ul>
+                                <li>Explicitly specify input/output relationship</li>
+                                <li>Use physical principles and domain knowledge</li>
+                                <li>Optimize model parameters</li>
+                                <li>Example: d = d₀ + v × t</li>
+                            </ul>
+                        </div>
+                        <div class="ml-approach">
+                            <h3>Machine Learning</h3>
+                            <ul>
+                                <li>Build implicit relationships from data</li>
+                                <li>Algorithm learns patterns automatically</li>
+                                <li>Focus on prediction, not parameters</li>
+                                <li>Example: Neural network, Decision tree</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Slide 23: Parameter Fitting Example -->
+            <div class="slide" data-slide="23">
+                <div class="slide-content">
+                    <h2>Traditional Approach: Parameter Fitting</h2>
+                    <div class="fitting-example">
+                        <h3>Physics Problem: Car at Uniform Speed</h3>
+                        <div class="code-example">
+                            <pre><code class="language-python">import numpy as np
+
+# Data: time (s) and distance (m)
+time = np.array([0, 1, 2, 3, 4, 5, 6, 7, 8, 9])
+distance = np.array([5.1, 5.5, 8.4, 11.1, 11.8, 14.4, 16.1, 19.5, 20.2, 23.1])
+
+# Model: d = d0 + v * t
+def model(t, d0, v):
+    return d0 + v * t
+
+# Minimize squared error
+def squared_error(params, t, d):
+    d0, v = params
+    predicted = model(t, d0, v)
+    return np.sum((predicted - d) ** 2)
+
+# Find best parameters
+from scipy.optimize import minimize
+result = minimize(squared_error, [5, 2], args=(time, distance))
+d0_best, v_best = result.x
+
+print(f"Initial position: {d0_best:.2f} m")
+print(f"Velocity: {v_best:.2f} m/s")</code></pre>
+                        </div>
+                        <p><strong>Prediction at t=12s:</strong> d = 4.34 + 2.04 × 12 = 28.82 m</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Slide 24: ML Approach Comparison -->
+            <div class="slide" data-slide="24">
+                <div class="slide-content">
+                    <h2>ML Approach: Same Problem</h2>
+                    <div class="ml-comparison">
+                        <div class="code-example">
+                            <pre><code class="language-python">from sklearn.linear_model import LinearRegression
+from sklearn.tree import DecisionTreeRegressor
+from sklearn.model_selection import train_test_split
+from sklearn.metrics import mean_squared_error
+
+# Same data
+X = time.reshape(-1, 1)
+y = distance
+
+# Split data
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, random_state=10)
+
+# Try two algorithms
+lr_model = LinearRegression()
+dt_model = DecisionTreeRegressor()
+
+# Train models
+lr_model.fit(X_train, y_train)
+dt_model.fit(X_train, y_train)
+
+# Make predictions
+lr_pred = lr_model.predict(X_test)
+dt_pred = dt_model.predict(X_test)
+
+# Compare performance
+lr_mse = mean_squared_error(y_test, lr_pred)
+dt_mse = mean_squared_error(y_test, dt_pred)
+
+print(f"Linear Regression MSE: {lr_mse:.2f}")
+print(f"Decision Tree MSE: {dt_mse:.2f}")</code></pre>
+                        </div>
+                        <div class="results">
+                            <h4>Results:</h4>
+                            <ul>
+                                <li>Linear Regression: Better performance (MSE: 0.18)</li>
+                                <li>Decision Tree: Worse performance (MSE: 5.22)</li>
+                                <li>LR Prediction at t=12: 29.2 m</li>
+                                <li>DT Prediction at t=12: 23.1 m</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Slide 25: When to Use Which Approach -->
+            <div class="slide" data-slide="25">
+                <div class="slide-content">
+                    <h2>When to Use Which Approach?</h2>
+                    <div class="decision-guide">
+                        <div class="scenario">
+                            <h3>Use Traditional Inference When:</h3>
+                            <ul>
+                                <li>✅ You understand the physics/domain well</li>
+                                <li>✅ You have limited data</li>
+                                <li>✅ You need interpretable parameters</li>
+                                <li>✅ The problem has known mathematical structure</li>
+                            </ul>
+                        </div>
+                        <div class="scenario">
+                            <h3>Use Machine Learning When:</h3>
+                            <ul>
+                                <li>✅ You have lots of data</li>
+                                <li>✅ The underlying physics is unknown/complex</li>
+                                <li>✅ You need robust handling of mixed data</li>
+                                <li>✅ You want to discover unexpected patterns</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="best-practice">
+                        <h3>🎯 Best Practice: Use Both!</h3>
+                        <p>Combine domain knowledge with data-driven approaches for optimal results</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Slide 26: The Black Box Issue -->
+            <div class="slide" data-slide="26">
+                <div class="slide-content">
+                    <h2>The Black Box Issue</h2>
+                    <div class="black-box-explanation">
+                        <div class="problem">
+                            <h3>The Problem</h3>
+                            <p>ML models don't give explicit equations - we can't simply "write down" the relationship</p>
+                            <div class="black-box-visual">
+                                <div class="input">Input Data</div>
+                                <div class="box">❓ Black Box ❓</div>
+                                <div class="output">Predictions</div>
+                            </div>
+                        </div>
+                        <div class="solution">
+                            <h3>The Solution: Open the Box!</h3>
+                            <ul>
+                                <li>🔍 Feature importance analysis</li>
+                                <li>📊 Partial dependence plots</li>
+                                <li>🌳 Model-specific interpretability (e.g., decision trees)</li>
+                                <li>🎯 Sensitivity analysis</li>
+                                <li>📈 Error analysis</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="scientist-note">
+                        <p><strong>Good scientists open the black box!</strong> This validates the model and can lead to new discoveries.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Slide 27: There is No Magic -->
+            <div class="slide" data-slide="27">
+                <div class="slide-content">
+                    <h2>There is No Magic! 🎩</h2>
+                    <div class="reality-check">
+                        <div class="key-points">
+                            <h3>ML is a Tool, Not the Trade Itself</h3>
+                            <ul>
+                                <li>🔧 ML methods are sophisticated tools</li>
+                                <li>📚 Like "Numerical Recipes" of this decade</li>
+                                <li>⚙️ Nicely packaged linear algebra operations</li>
+                                <li>🧠 Still need good scientific thinking</li>
+                            </ul>
+                        </div>
+                        <div class="scientific-method">
+                            <h3>Always Follow Scientific Method</h3>
+                            <div class="method-steps">
+                                <div class="step">1. Form hypothesis</div>
+                                <div class="step">2. Design experiments</div>
+                                <div class="step">3. Test rigorously</div>
+                                <div class="step">4. Validate results</div>
+                            </div>
+                        </div>
+                        <div class="wisdom">
+                            <p><em>"Understanding when ML can help and the strengths/weaknesses of specific methods is crucial for good science."</em></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Slide 28: Practical Considerations -->
+            <div class="slide" data-slide="28">
+                <div class="slide-content">
+                    <h2>Practical Considerations</h2>
+                    <div class="considerations-grid">
+                        <div class="consideration">
+                            <h3>🗃️ Data Quality</h3>
+                            <ul>
+                                <li>Representative samples</li>
+                                <li>Sufficient quantity</li>
+                                <li>Minimal bias</li>
+                                <li>Proper preprocessing</li>
+                            </ul>
+                        </div>
+                        <div class="consideration">
+                            <h3>🎯 Problem Definition</h3>
+                            <ul>
+                                <li>Clear objectives</li>
+                                <li>Appropriate metrics</li>
+                                <li>Realistic expectations</li>
+                                <li>Success criteria</li>
+                            </ul>
+                        </div>
+                        <div class="consideration">
+                            <h3>⚖️ Model Selection</h3>
+                            <ul>
+                                <li>Match complexity to data size</li>
+                                <li>Consider interpretability needs</li>
+                                <li>Computational constraints</li>
+                                <li>Deployment requirements</li>
+                            </ul>
+                        </div>
+                        <div class="consideration">
+                            <h3>🔬 Validation</h3>
+                            <ul>
+                                <li>Proper train/test splits</li>
+                                <li>Cross-validation</li>
+                                <li>Out-of-distribution testing</li>
+                                <li>Error analysis</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Slide 29: Common Pitfalls -->
+            <div class="slide" data-slide="29">
+                <div class="slide-content">
+                    <h2>Common Pitfalls to Avoid</h2>
+                    <div class="pitfalls-list">
+                        <div class="pitfall">
+                            <h3>🚫 Data Leakage</h3>
+                            <p>When future information accidentally leaks into training data</p>
+                        </div>
+                        <div class="pitfall">
+                            <h3>📊 Overfitting</h3>
+                            <p>Model memorizes training data but fails on new data</p>
+                        </div>
+                        <div class="pitfall">
+                            <h3>📉 Underfitting</h3>
+                            <p>Model is too simple to capture important patterns</p>
+                        </div>
+                        <div class="pitfall">
+                            <h3>⚖️ Biased Data</h3>
+                            <p>Training data not representative of real-world application</p>
+                        </div>
+                        <div class="pitfall">
+                            <h3>🎯 Wrong Metrics</h3>
+                            <p>Optimizing for metrics that don't align with actual goals</p>
+                        </div>
+                        <div class="pitfall">
+                            <h3>📦 Black Box Worship</h3>
+                            <p>Using models without understanding their behavior</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Slide 30: Summary: Key Takeaways -->
+            <div class="slide" data-slide="30">
+                <div class="slide-content">
+                    <h2>Key Takeaways</h2>
+                    <div class="takeaways">
+                        <div class="takeaway">
+                            <h3>🤖 What is ML?</h3>
+                            <p>Teaching machines to make data-driven decisions through pattern recognition</p>
+                        </div>
+                        <div class="takeaway">
+                            <h3>🎯 Four Main Tasks</h3>
+                            <p>Recognition, Prediction, Grouping, Simplification</p>
+                        </div>
+                        <div class="takeaway">
+                            <h3>📚 Learn the Language</h3>
+                            <p>Instances, Features, Targets, Models - clear communication is key</p>
+                        </div>
+                        <div class="takeaway">
+                            <h3>👨‍🏫 Supervised Learning</h3>
+                            <p>Learning from labeled examples - the foundation of most ML</p>
+                        </div>
+                        <div class="takeaway">
+                            <h3>🔍 Unsupervised Learning</h3>
+                            <p>Discovering patterns without labels - clustering and dimensionality reduction</p>
+                        </div>
+                        <div class="takeaway">
+                            <h3>⚖️ Balance is Key</h3>
+                            <p>Combine ML with domain knowledge for best results</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Slide 31: Next Steps -->
+            <div class="slide" data-slide="31">
+                <div class="slide-content">
+                    <h2>Next Steps in Your ML Journey</h2>
+                    <div class="learning-path">
+                        <div class="path-section">
+                            <h3>📖 Theoretical Foundation</h3>
+                            <ul>
+                                <li>Linear algebra and statistics</li>
+                                <li>Probability theory</li>
+                                <li>Optimization methods</li>
+                                <li>Information theory</li>
+                            </ul>
+                        </div>
+                        <div class="path-section">
+                            <h3>💻 Practical Skills</h3>
+                            <ul>
+                                <li>Python programming (pandas, scikit-learn)</li>
+                                <li>Data visualization</li>
+                                <li>Feature engineering</li>
+                                <li>Model evaluation techniques</li>
+                            </ul>
+                        </div>
+                        <div class="path-section">
+                            <h3>🔬 Specialized Topics</h3>
+                            <ul>
+                                <li>Deep learning and neural networks</li>
+                                <li>Natural language processing</li>
+                                <li>Computer vision</li>
+                                <li>Time series analysis</li>
+                            </ul>
+                        </div>
+                        <div class="path-section">
+                            <h3>🎯 Practice Projects</h3>
+                            <ul>
+                                <li>Kaggle competitions</li>
+                                <li>Real-world datasets</li>
+                                <li>Reproducible research</li>
+                                <li>Collaboration and peer review</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Slide 32: Resources -->
+            <div class="slide" data-slide="32">
+                <div class="slide-content">
+                    <h2>Recommended Resources</h2>
+                    <div class="resources-grid">
+                        <div class="resource-category">
+                            <h3>📚 Books</h3>
+                            <ul>
+                                <li>Pattern Recognition and Machine Learning - Bishop</li>
+                                <li>The Elements of Statistical Learning - Hastie et al.</li>
+                                <li>Hands-On Machine Learning - Géron</li>
+                                <li>Machine Learning Yearning - Ng</li>
+                            </ul>
+                        </div>
+                        <div class="resource-category">
+                            <h3>💻 Online Courses</h3>
+                            <ul>
+                                <li>Coursera ML Course - Andrew Ng</li>
+                                <li>Fast.ai Practical Deep Learning</li>
+                                <li>edX MIT Introduction to ML</li>
+                                <li>Udacity ML Engineer Nanodegree</li>
+                            </ul>
+                        </div>
+                        <div class="resource-category">
+                            <h3>🛠️ Tools & Libraries</h3>
+                            <ul>
+                                <li>Python: scikit-learn, pandas, numpy</li>
+                                <li>Visualization: matplotlib, seaborn, plotly</li>
+                                <li>Deep Learning: TensorFlow, PyTorch</li>
+                                <li>Environments: Jupyter, Google Colab</li>
+                            </ul>
+                        </div>
+                        <div class="resource-category">
+                            <h3>🌍 Communities</h3>
+                            <ul>
+                                <li>Stack Overflow</li>
+                                <li>Reddit r/MachineLearning</li>
+                                <li>Kaggle Forums</li>
+                                <li>Local ML meetups</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Slide 33: Thank You -->
+            <div class="slide" data-slide="33">
+                <div class="slide-content title-slide">
+                    <h1>Thank You!</h1>
+                    <div class="closing-message">
+                        <p>Questions and Discussion</p>
+                        <br>
+                        <p class="contact-info">Introduction to Machine Learning Methods</p>
+                        <p class="course-complete">You've completed the foundational journey into ML!</p>
+                    </div>
+                    <div class="final-quote">
+                        <p><em>"The best way to learn machine learning is to practice it."</em></p>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- Side Navigation -->
+        <div class="side-nav" id="sideNav">
+            <button class="side-nav-toggle" id="sideNavToggle">📋</button>
+            <div class="side-nav-content">
+                <h3>Quick Navigation</h3>
+                <div class="nav-sections">
+                    <div class="nav-section">
+                        <h4>Introduction</h4>
+                        <button onclick="goToSlide(1)">Title</button>
+                        <button onclick="goToSlide(2)">Contents</button>
+                        <button onclick="goToSlide(3)">What is ML?</button>
+                    </div>
+                    <div class="nav-section">
+                        <h4>Foundations</h4>
+                        <button onclick="goToSlide(5)">Four ML Problems</button>
+                        <button onclick="goToSlide(6)">ML Language</button>
+                        <button onclick="goToSlide(9)">Supervised vs Unsupervised</button>
+                    </div>
+                    <div class="nav-section">
+                        <h4>Supervised Learning</h4>
+                        <button onclick="goToSlide(10)">Introduction</button>
+                        <button onclick="goToSlide(12)">Train/Test Sets</button>
+                        <button onclick="goToSlide(14)">Classification vs Regression</button>
+                    </div>
+                    <div class="nav-section">
+                        <h4>Advanced Topics</h4>
+                        <button onclick="goToSlide(18)">Unsupervised Learning</button>
+                        <button onclick="goToSlide(22)">ML vs Inference</button>
+                        <button onclick="goToSlide(27)">Practical Considerations</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script src="app.js"></script>
+</body>
+</html>

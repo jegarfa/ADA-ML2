@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>k-Nearest Neighbors (kNN) Algorithm - Lecture</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="presentation-container">
+        <!-- Slide 1: Title -->
+        <div class="slide active" id="slide-1">
+            <div class="slide-content title-slide">
+                <h1>k-Nearest Neighbors (kNN) Algorithm</h1>
+                <h2>Machine Learning Lecture</h2>
+            </div>
+        </div>
+
+        <!-- Slide 2: What is kNN? -->
+        <div class="slide" id="slide-2">
+            <div class="slide-content">
+                <h1>What is kNN?</h1>
+                <ul class="main-points">
+                    <li><strong>Definition:</strong> k-Nearest Neighbors is a non-parametric, supervised learning algorithm</li>
+                    <li><strong>Versatile:</strong> Used for both classification and regression tasks</li>
+                    <li><strong>Principle:</strong> Based on similarity/proximity - "similar inputs produce similar outputs"</li>
+                    <li><strong>Lazy Learning:</strong> No explicit training phase - stores all training data</li>
+                    <li><strong>Instance-based:</strong> Makes predictions by looking at the k most similar examples</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Slide 3: How kNN Works - Basic Concept -->
+        <div class="slide" id="slide-3">
+            <div class="slide-content">
+                <h1>How kNN Works - Basic Concept</h1>
+                <div class="concept-explanation">
+                    <h3>The "Neighborhood" Intuition</h3>
+                    <p><strong>Restaurant Example:</strong> When choosing a restaurant, you might ask friends with similar tastes for recommendations. kNN works similarly:</p>
+                    <ul class="main-points">
+                        <li>Find the k "most similar" examples in your training data</li>
+                        <li>Look at what they predict/recommend</li>
+                        <li>Use majority vote (classification) or average (regression)</li>
+                    </ul>
+                    <div class="key-insight">
+                        <h4>Key Insight:</h4>
+                        <p>kNN assumes that similar data points are likely to have similar outcomes</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 4: kNN Algorithm Steps -->
+        <div class="slide" id="slide-4">
+            <div class="slide-content">
+                <h1>kNN Algorithm Steps</h1>
+                <table class="algorithm-table">
+                    <thead>
+                        <tr>
+                            <th>Step</th>
+                            <th>Description</th>
+                            <th>Purpose</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>1</td>
+                            <td>Choose the number k of neighbors</td>
+                            <td>Hyperparameter selection</td>
+                        </tr>
+                        <tr>
+                            <td>2</td>
+                            <td>Calculate distance between query instance and all training samples</td>
+                            <td>Similarity measurement</td>
+                        </tr>
+                        <tr>
+                            <td>3</td>
+                            <td>Sort distances and determine nearest k neighbors</td>
+                            <td>Find most similar instances</td>
+                        </tr>
+                        <tr>
+                            <td>4</td>
+                            <td>Gather the labels of the nearest k neighbors</td>
+                            <td>Collect neighbor information</td>
+                        </tr>
+                        <tr>
+                            <td>5</td>
+                            <td>Use majority vote (classification) or average (regression) to predict</td>
+                            <td>Make final prediction</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Slide 5: Distance Metrics -->
+        <div class="slide" id="slide-5">
+            <div class="slide-content">
+                <h1>Distance Metrics</h1>
+                <div class="content-with-image">
+                    <table class="distance-table">
+                        <thead>
+                            <tr>
+                                <th>Distance Metric</th>
+                                <th>Formula</th>
+                                <th>Best Use Case</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Euclidean</td>
+                                <td>√(Σ(xi-yi)²)</td>
+                                <td>Continuous features, normal distribution</td>
+                            </tr>
+                            <tr>
+                                <td>Manhattan</td>
+                                <td>Σ|xi-yi|</td>
+                                <td>High dimensions, grid-like data</td>
+                            </tr>
+                            <tr>
+                                <td>Minkowski</td>
+                                <td>(Σ|xi-yi|^p)^(1/p)</td>
+                                <td>Flexible metric, various distributions</td>
+                            </tr>
+                            <tr>
+                                <td>Cosine</td>
+                                <td>1 - (x·y)/(||x||·||y||)</td>
+                                <td>Text data, high-dimensional sparse data</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <div class="chart-container">
+                        <img src="https://ppl-ai-code-interpreter-files.s3.amazonaws.com/web/direct-files/9348a5aa7f039195d89f3ade0327d39e/0655dc73-3c95-4521-810d-4f932ee83b38/4f9cf35e.png" alt="Distance Metrics Comparison" class="chart-image">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 6: kNN Classification Example -->
+        <div class="slide" id="slide-6">
+            <div class="slide-content">
+                <h1>kNN Classification Example</h1>
+                <div class="chart-container">
+                    <img src="https://ppl-ai-code-interpreter-files.s3.amazonaws.com/web/direct-files/9348a5aa7f039195d89f3ade0327d39e/884c5d14-96e8-46d8-98e8-3a6b01ea2b74/9295f9a1.png" alt="kNN Classification Visualization" class="chart-image">
+                </div>
+                <div class="explanation">
+                    <h3>Majority Voting Concept:</h3>
+                    <ul class="main-points">
+                        <li><strong>k=3:</strong> Look at 3 nearest neighbors and use majority vote</li>
+                        <li><strong>k=5:</strong> Look at 5 nearest neighbors for more stable prediction</li>
+                        <li><strong>Decision:</strong> The class with the most votes wins</li>
+                        <li><strong>Impact:</strong> Different k values can lead to different classifications</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 7: Effect of k Value -->
+        <div class="slide" id="slide-7">
+            <div class="slide-content">
+                <h1>Effect of k Value</h1>
+                <div class="chart-container">
+                    <img src="https://ppl-ai-code-interpreter-files.s3.amazonaws.com/web/direct-files/9348a5aa7f039195d89f3ade0327d39e/d2b3b81e-3acf-4368-9e9c-375bd76b3be3/54018279.png" alt="kNN Accuracy vs k Value" class="chart-image">
+                </div>
+                <div class="explanation">
+                    <h3>Bias-Variance Tradeoff:</h3>
+                    <ul class="main-points">
+                        <li><strong>Small k (k=1):</strong> Low bias, high variance → overfitting</li>
+                        <li><strong>Large k:</strong> High bias, low variance → underfitting</li>
+                        <li><strong>Optimal k:</strong> Balance between bias and variance</li>
+                        <li><strong>Cross-validation:</strong> Use to find the best k value</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 8: kNN for Regression -->
+        <div class="slide" id="slide-8">
+            <div class="slide-content">
+                <h1>kNN for Regression</h1>
+                <div class="regression-explanation">
+                    <h3>House Price Prediction Example:</h3>
+                    <p><strong>Key Difference:</strong> Instead of majority voting, we use averaging of neighbor values</p>
+                    <div class="regression-table">
+                        <table>
+                            <thead>
+                                <tr><th>House Size (sq ft)</th><th>Price ($)</th></tr>
+                            </thead>
+                            <tbody>
+                                <tr><td>1500</td><td>$220,000</td></tr>
+                                <tr><td>1800</td><td>$250,000</td></tr>
+                                <tr><td>2000</td><td>$280,000</td></tr>
+                                <tr><td>2200</td><td>$320,000</td></tr>
+                                <tr><td>2500</td><td>$350,000</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="formula">
+                        <h4>Prediction Formula:</h4>
+                        <p><strong>Predicted Value = Average of k nearest neighbors' target values</strong></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 9: Advantages and Disadvantages -->
+        <div class="slide" id="slide-9">
+            <div class="slide-content">
+                <h1>Advantages and Disadvantages</h1>
+                <div class="pros-cons-container">
+                    <div class="pros">
+                        <h3>Advantages ✅</h3>
+                        <ul>
+                            <li>Simple and intuitive algorithm</li>
+                            <li>No assumptions about data distribution</li>
+                            <li>Can be used for both classification and regression</li>
+                            <li>Adapts well to new data</li>
+                            <li>No training period required (lazy learning)</li>
+                            <li>Can handle multi-class problems naturally</li>
+                            <li>Robust to outliers with appropriate k</li>
+                        </ul>
+                    </div>
+                    <div class="cons">
+                        <h3>Disadvantages ❌</h3>
+                        <ul>
+                            <li>Computationally expensive for large datasets</li>
+                            <li>Sensitive to irrelevant features</li>
+                            <li>Sensitive to the scale of features</li>
+                            <li>Performance degrades in high dimensions</li>
+                            <li>Difficult to choose optimal k value</li>
+                            <li>Memory intensive (stores entire dataset)</li>
+                            <li>Slow prediction time</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 10: Real-world Applications -->
+        <div class="slide" id="slide-10">
+            <div class="slide-content">
+                <h1>Real-world Applications</h1>
+                <table class="applications-table">
+                    <thead>
+                        <tr>
+                            <th>Domain</th>
+                            <th>Application</th>
+                            <th>Example</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Computer Vision</td>
+                            <td>Image classification, object recognition</td>
+                            <td>Classifying handwritten digits (MNIST)</td>
+                        </tr>
+                        <tr>
+                            <td>Recommendation Systems</td>
+                            <td>Movie/product recommendations</td>
+                            <td>Netflix movie recommendations</td>
+                        </tr>
+                        <tr>
+                            <td>Finance</td>
+                            <td>Credit scoring, fraud detection</td>
+                            <td>Detecting fraudulent transactions</td>
+                        </tr>
+                        <tr>
+                            <td>Healthcare</td>
+                            <td>Disease diagnosis, drug discovery</td>
+                            <td>Predicting patient outcomes</td>
+                        </tr>
+                        <tr>
+                            <td>Text Mining</td>
+                            <td>Document classification, sentiment analysis</td>
+                            <td>Spam email detection</td>
+                        </tr>
+                        <tr>
+                            <td>E-commerce</td>
+                            <td>Customer segmentation, price prediction</td>
+                            <td>Recommending products to customers</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Slide 11: Choosing the Right k -->
+        <div class="slide" id="slide-11">
+            <div class="slide-content">
+                <h1>Choosing the Right k</h1>
+                <div class="k-selection">
+                    <h3>Methods for Selecting Optimal k:</h3>
+                    <div class="methods-grid">
+                        <div class="method">
+                            <h4>Cross-Validation</h4>
+                            <ul>
+                                <li>Split data into training and validation sets</li>
+                                <li>Test different k values</li>
+                                <li>Choose k with best validation performance</li>
+                            </ul>
+                        </div>
+                        <div class="method">
+                            <h4>Elbow Method</h4>
+                            <ul>
+                                <li>Plot accuracy vs k values</li>
+                                <li>Look for the "elbow" point</li>
+                                <li>Balance between bias and variance</li>
+                            </ul>
+                        </div>
+                        <div class="method">
+                            <h4>Rule of Thumb</h4>
+                            <ul>
+                                <li>k = √n (where n is number of samples)</li>
+                                <li>Use odd numbers to avoid ties</li>
+                                <li>Start with k=3 or k=5 for small datasets</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 12: Implementation Considerations -->
+        <div class="slide" id="slide-12">
+            <div class="slide-content">
+                <h1>Implementation Considerations</h1>
+                <div class="considerations">
+                    <div class="consideration">
+                        <h3>Feature Scaling</h3>
+                        <p><strong>Critical:</strong> Features with larger scales dominate distance calculations</p>
+                        <p><strong>Solution:</strong> Normalize or standardize features before applying kNN</p>
+                    </div>
+                    <div class="consideration">
+                        <h3>High Dimensionality</h3>
+                        <p><strong>Curse of Dimensionality:</strong> Distance becomes less meaningful in high dimensions</p>
+                        <p><strong>Solution:</strong> Feature selection or dimensionality reduction (PCA)</p>
+                    </div>
+                    <div class="consideration">
+                        <h3>Computational Complexity</h3>
+                        <p><strong>Training:</strong> O(1) - just store the data</p>
+                        <p><strong>Prediction:</strong> O(n×d) where n=samples, d=dimensions</p>
+                    </div>
+                    <div class="consideration">
+                        <h3>Memory Requirements</h3>
+                        <p><strong>Challenge:</strong> Must store entire training dataset</p>
+                        <p><strong>Solutions:</strong> Data structures like KD-trees, LSH for efficiency</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 13: Summary and Key Takeaways -->
+        <div class="slide" id="slide-13">
+            <div class="slide-content">
+                <h1>Summary and Key Takeaways</h1>
+                <div class="summary">
+                    <div class="key-points">
+                        <h3>Essential Points:</h3>
+                        <ul class="main-points">
+                            <li><strong>Simple yet Powerful:</strong> Easy to understand and implement</li>
+                            <li><strong>Lazy Learning:</strong> No training phase - stores all data</li>
+                            <li><strong>Critical Choices:</strong> k value and distance metric are crucial</li>
+                            <li><strong>Sweet Spot:</strong> Works well for small to medium datasets</li>
+                            <li><strong>Foundation:</strong> Understanding kNN helps with more complex algorithms</li>
+                        </ul>
+                    </div>
+                    <div class="remember">
+                        <h3>Remember:</h3>
+                        <div class="remember-points">
+                            <p>✓ Always scale your features</p>
+                            <p>✓ Use cross-validation to choose k</p>
+                            <p>✓ Consider computational constraints</p>
+                            <p>✓ kNN is a great baseline algorithm</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Navigation -->
+        <div class="navigation">
+            <button id="prev-btn" class="nav-btn">Previous</button>
+            <span id="slide-counter">1 / 13</span>
+            <button id="next-btn" class="nav-btn">Next</button>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>

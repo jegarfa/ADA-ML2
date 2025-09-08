@@ -1,0 +1,622 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Support Vector Machines - ML Lecture</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.3.1/reveal.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.3.1/theme/white.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css">
+    <link rel="stylesheet" href="style.css">
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+</head>
+<body>
+    <div class="reveal">
+        <div class="slides">
+            <!-- Slide 1: Title -->
+            <section data-markdown>
+                <textarea data-template>
+                # Support Vector Machines
+                ## Methods and Algorithms for Machine Learning
+
+                **Jorge Enrique García Farieta**  
+                *Mathematics Department*
+
+                </textarea>
+            </section>
+
+            <!-- Slide 2: Outline -->
+            <section data-markdown>
+                <textarea data-template>
+                ## Lecture Outline
+
+                1. **Introduction to SVM**
+                2. **Mathematical Foundations**
+                3. **Hard vs Soft Margin**
+                4. **Lagrange Multipliers & Optimization**
+                5. **Kernel Functions & Kernel Trick**
+                6. **Scikit-learn Implementation**
+                7. **Hyperparameter Tuning**
+                8. **Model Evaluation**
+                9. **Practical Examples with Iris Dataset**
+                10. **Exercises & Homework**
+                </textarea>
+            </section>
+
+            <!-- Slide 3: What is SVM? -->
+            <section data-markdown>
+                <textarea data-template>
+                ## What is Support Vector Machine?
+
+                - **Supervised learning algorithm** for classification and regression
+                - **Goal**: Find the optimal hyperplane that separates classes
+                - **Key idea**: Maximize the margin between classes
+                - **Advantages**:
+                  - Effective in high dimensions
+                  - Memory efficient (uses support vectors)
+                  - Versatile (different kernels)
+                - **Applications**: Text classification, image recognition, bioinformatics
+                </textarea>
+            </section>
+
+            <!-- Slide 4: Geometric Intuition -->
+            <section data-markdown>
+                <textarea data-template>
+                ## Geometric Intuition
+                **Which one do you think is a better classification?**
+                <img src="img/Fig1.png" alt="Hard Margin SVM Illustration" style="width: 100%; height: auto;">
+
+                <p class="fragment">Exercise: Why do you feel (B) gives a better classification?</p>
+                <p class="fragment">The decision boundary in (B) leaves a relatively large distance from both of the
+                clusters. Intuitively, this minimizes the probability of misclassification.</p>
+              
+                <p class="fragment">With the intuition above, we have two expectations from an ideal linear decision
+                boundary:</p>
+              
+                <ul>
+                  <li class="fragment">To segregate the samples from different classes as much as possible.</li>
+                  <li class="fragment">To maximize the distances of samples from the decision boundary.</li>
+                </ul>
+                </textarea>
+            </section>
+
+            <section data-markdown>
+                <textarea data-template>
+                ## Geometric Intuition
+
+                <img src="img/Fig2.png" alt="Description" style="width: 70%; height: auto;">
+
+                - **Hyperplane**: Decision boundary separating classes
+                - **Margin**: Distance between hyperplane and closest data points
+                - **Support Vectors**: Data points on the margin boundaries
+                </textarea>
+            </section>
+
+            <!-- Slide 5: Mathematical Formulation - Linear Case -->
+            <section data-markdown>
+                <textarea data-template>
+                ## Mathematical Formulation: Linear SVM
+
+                A decision function that is linear in the input
+                $f(\mathbf{x})=\mathbf{w}^T \mathbf{x}+b$
+
+                The vector $\mathbf{w}$ is the weight vector; $b$ is the bias, and $\mathbf{w}^T\mathbf{x}$ is the dot product between the weight vector and any input example $\mathbf{x}$. The decision boundary is defined by
+
+                **Hyperplane equation**: $w^T x + b = 0$
+
+                in other words, it is where the decision function vanishes.
+                The hyperplane defined by this equation divides the space into two according
+                to the sign of the discriminant function $f(x)$.
+
+                **Classification rule**: 
+                $$\text{class} = \text{sign}(w^T x + b)$$
+
+                **Margin**: Distance from point to hyperplane
+                $$\text{margin} = \frac{|w^T x + b|}{||w||}$$
+
+                **Goal**: Maximize margin = Minimize $||w||$
+                </textarea>
+            </section>
+
+            <!-- Slide 6: Hard Margin SVM -->
+            <section data-markdown>
+                <textarea data-template>
+                ## Hard Margin SVM
+
+                **Optimization Problem**:
+                $$\min_{w,b} \frac{1}{2}||w||^2$$
+
+                **Subject to constraints**:
+                $$y_i(w^T x_i + b) \geq 1, \quad i = 1,\ldots,n$$
+
+                - Assumes **linearly separable** data
+                - All points correctly classified with margin ≥ 1
+                - **Problem**: No solution if data not separable!
+                </textarea>
+            </section>
+
+            <!-- Slide 7: Soft Margin SVM -->
+            <section data-markdown>
+                <textarea data-template>
+                ## Soft Margin SVM
+
+                **Allow misclassification** with slack variables $\xi_i$:
+
+                <img src="img/Fig3.png" alt="Soft Margin" style="width: 100%; height: auto;">
+                This data set cannot be exactly separated by a line (left), but we can obtain a rea-
+                sonably well-behaved classifier by allowing some examples to lie within the margin and some
+                misclassifications to be near the boundary. These are assigned a penalty in the loss function
+                that is proportional to the distance ξ i to the margin of the corresponding class (right).
+
+                </textarea>
+            </section>
+
+            <!-- Slide 7: Soft Margin SVM -->
+            <section data-markdown>
+                <textarea data-template>
+                ## Soft Margin SVM
+
+                **Allow misclassification** with slack variables $\xi_i$:
+
+                $$\min_{w,b,\xi} \frac{1}{2}||w||^2 + C \sum_{i=1}^{n} \xi_i$$
+
+                **Subject to**:
+                $$y_i(w^T x_i + b) \geq 1 - \xi_i, \quad \xi_i \geq 0$$
+
+                - **C**: Regularization parameter
+                - **Large C**: Hard margin (less misclassification)
+                - **Small C**: Soft margin (more misclassification)
+                </textarea>
+            </section>
+
+            <!-- Slide 8: Effect of C Parameter -->
+            <section data-markdown>
+                <textarea data-template>
+                ## Effect of C Parameter
+
+                <img src="https://ppl-ai-code-interpreter-files.s3.amazonaws.com/web/direct-files/fc70d8c16a45e621eecdd0a0dab1285e/7358b53d-ea96-4178-a805-f44a22cdc446/23bd9ae9.png" alt="SVM Decision Boundaries" style="width: 70%; height: auto;">
+
+                **C parameter controls the trade-off**:
+                - **Bias vs Variance**
+                - **Complexity vs Generalization**
+                </textarea>
+            </section>
+
+            <!-- Slide 9: Lagrange Multipliers -->
+            <section data-markdown>
+                <textarea data-template>
+                ## Exercise: Optimization Problem
+
+                Using the result above for the hard-margin SVM:
+                
+                $$
+                \min_{\mathbf{\beta}, \beta_0} \quad \frac{1}{2} \|\mathbf{\beta}\|^2
+                \quad \text{subject to} \quad
+                y_i(\mathbf{\beta}^T \mathbf{x}_i + \beta_0) \geq 1 \quad \forall i
+                $$
+                
+                Why do we minimize $\frac{1}{2} \|\mathbf{\beta}\|^2$ instead of $\|\mathbf{\beta}\|$?
+
+                
+                ## Exercise: Margin Width Derivation
+
+                Show that the distance $d$ from a point $\mathbf{x}$ to the hyperplane $\mathbf{\beta}^T \mathbf{x} + \beta_0 = 0$ is:
+                
+                $$
+                d = \frac{|\mathbf{\beta}^T \mathbf{x} + \beta_0|}{\|\mathbf{\beta}\|}
+                $$
+                
+                Use this to argue that maximizing the margin is equivalent to **minimizing** $\|\mathbf{\beta}\|$.
+                
+                
+                </textarea>
+            </section>
+
+            <!-- Slide 9: Lagrange Multipliers -->
+            <section data-markdown>
+                <textarea data-template>
+                ## Lagrange Multipliers Method
+
+                $$
+                \begin{aligned}
+                &\min_{\mathbf{\beta}, \beta_0} \quad && \frac{1}{2} \|\mathbf{\beta}\|^2 \\\\
+                &\text{subject to} \quad && y_i (\mathbf{\beta}^T \mathbf{x}_i + \beta_0) \geq 1 \quad \text{for } i = 1, \dots, n
+                \end{aligned}
+                $$
+                
+                The **Lagrange multiplier $\alpha_i \geq 0$** for each constraint:
+                
+                $$
+                y_i (\mathbf{\beta}^T \mathbf{x}_i + \beta_0) \geq 1
+                $$
+                
+                Then we define the **Lagrangian**:
+                
+                $$
+                \mathcal{L}(\mathbf{\beta}, \beta_0, \mathbf{\alpha}) =
+                \frac{1}{2} \|\mathbf{\beta}\|^2 - \sum_{i=1}^n \alpha_i \left[ y_i (\mathbf{\beta}^T \mathbf{x}_i + \beta_0) - 1 \right]
+                $$
+                
+                Here:
+                
+                * $\mathbf{\alpha} = (\alpha_1, \dots, \alpha_n)$
+                * The Lagrangian combines the **objective** and the **constraints**
+                
+                ** Karush-Kuhn-Tucker (KKT) Conditions**:
+                1. $\frac{\partial L}{\partial w} = 0 \Rightarrow w = \sum_{i=1}^{n} \alpha_i y_i x_i$
+                2. $\frac{\partial L}{\partial b} = 0 \Rightarrow \sum_{i=1}^{n} \alpha_i y_i = 0$
+                3. $\alpha_i \geq 0$, $\alpha_i[y_i(w^T x_i + b) - 1] = 0$
+                </textarea>
+            </section>
+
+            <!-- Slide 10: Dual Problem -->
+            <section data-markdown>
+                <textarea data-template>
+                ## **Example: Maximize a Function on a Circle**
+
+                Find the **maximum** and **minimum** values of the function:
+                
+                $$
+                f(x, y) = xy
+                $$
+                
+                subject to the constraint:
+                
+                $$
+                x^2 + y^2 = 1
+                $$
+                
+                This constraint is the **unit circle**, so the feasible region is compact (closed and bounded) — we are guaranteed to find both a **maximum and minimum**.
+                                
+                </textarea>
+            </section>
+
+            <!-- Slide 11: Kernel Trick Introduction -->
+            <section data-markdown>
+                <textarea data-template>
+                    ## **Exercise:**
+
+                    Find the **maximum** and **minimum** values of the function:
+                    
+                    $$
+                    f(x, y) = x^2 + y^2
+                    $$
+                    
+                    subject to the constraint:
+                    
+                    $$
+                    x + y = 1
+                    $$
+                </textarea>
+            </section>
+
+
+            <!-- Slide 7: Nonlinearly separable data and kernel functions -->
+            <section data-markdown>
+                <textarea data-template>
+                ## Nonlinearly separable data and kernel functions
+
+                <img src="img/Fig4.png" alt="3D problem" style="width: 100%; height: auto;">
+
+                This data set cannot be separated by a linear classifier (left), but we can turn the
+                problem into a linearly separable one by mapping the points onto a three-dimensional space
+                (right).
+
+
+                The question that naturally arises is: How can we find the $\phi(x)$ transformation?
+And here the “magic” of kernel SVMs arises.
+                </textarea>
+            </section>
+
+
+            <!-- Slide 7: Nonlinearly separable data and kernel functions -->
+            <section data-markdown>
+                <textarea data-template>
+                ## Nonlinearly separable data and kernel functions
+
+                <img src="img/Fig4.png" alt="3D problem" style="width: 100%; height: auto;">
+                
+                Linear and kernel-based SVMs tend to be one of the most powerful and accurate
+                supervised learning methods before “going neural”.
+                
+                </textarea>
+            </section>
+
+
+
+            <!-- Slide 12: Common Kernel Functions -->
+            <section data-markdown>
+                <textarea data-template>
+                ## Common Kernel Functions
+
+                **Linear Kernel**:
+                $$K(x_i, x_j) = x_i^T x_j$$
+
+                **Polynomial Kernel**:
+                $$K(x_i, x_j) = (\gamma x_i^T x_j + r)^d$$
+
+                **RBF (Gaussian) Kernel**:
+                $$K(x_i, x_j) = \exp\left(-\gamma ||x_i - x_j||^2\right)$$
+
+                **Sigmoid Kernel**:
+                $$K(x_i, x_j) = \tanh(\gamma x_i^T x_j + r)$$
+
+                <img src="https://ppl-ai-code-interpreter-files.s3.amazonaws.com/web/direct-files/fc70d8c16a45e621eecdd0a0dab1285e/1c48bf18-ded1-48f0-9df5-eb1be5446991/fd993af9.png" alt="Kernel Functions Table" style="width: 70%; height: auto;">
+                </textarea>
+            </section>
+
+            <!-- Slide 13: RBF Kernel Deep Dive -->
+            <section data-markdown>
+                <textarea data-template>
+                ## Regularization parameter C
+
+                The parameter C is the penalty attributed to training examples that are either in the margin or misclassified.
+
+                <img src="img/Fig5.png" alt="Parameter C" style="width: 100%; height: auto;">
+                
+                </textarea>
+            </section>
+
+            <!-- Slide 14: Scikit-learn Implementation -->
+            <section data-markdown>
+                <textarea data-template>
+                ## Scikit-learn Implementation
+
+                ```python
+                from sklearn.svm import SVC
+                from sklearn.model_selection import train_test_split
+                from sklearn.datasets import load_iris
+
+                # Load data
+                iris = load_iris()
+                X = iris.data
+                y = iris.target
+
+                # Split data
+                X_train, X_test, y_train, y_test = train_test_split(
+                    X, y, test_size=0.3, random_state=42)
+
+                # Create and train SVM
+                svm_model = SVC(kernel='rbf', C=1.0, gamma='scale')
+                svm_model.fit(X_train, y_train)
+
+                # Make predictions
+                y_pred = svm_model.predict(X_test)
+                ```
+                </textarea>
+            </section>
+
+            <!-- Slide 15: Key Parameters -->
+            <section data-markdown>
+                <textarea data-template>
+                ## Key SVM Parameters in Scikit-learn
+
+                **Main parameters**:
+                - **`kernel`**: 'linear', 'poly', 'rbf', 'sigmoid'
+                - **`C`**: Regularization strength (default=1.0)
+                - **`gamma`**: Kernel coefficient for RBF/poly/sigmoid
+
+                **Gamma options**:
+                - **'scale'**: 1/(n_features × X.var()) [default]
+                - **'auto'**: 1/n_features
+                - **float**: Custom value
+
+                **Other parameters**: `degree` (poly), `coef0` (poly/sigmoid)
+                </textarea>
+            </section>
+
+            <!-- Slide 16: Hyperparameter Tuning -->
+            <section data-markdown>
+                <textarea data-template>
+                ## Hyperparameter Tuning
+
+                ```python
+                from sklearn.model_selection import GridSearchCV
+
+                # Define parameter grid
+                param_grid = {
+                    'C': [0.1, 1, 10, 100],
+                    'gamma': ['scale', 'auto', 0.01, 0.1, 1],
+                    'kernel': ['rbf', 'poly', 'linear']
+                }
+
+                # Grid search with cross-validation
+                grid_search = GridSearchCV(SVC(), param_grid, 
+                                         cv=5, scoring='accuracy')
+                grid_search.fit(X_train, y_train)
+
+                print(f'Best parameters: {grid_search.best_params_}')
+                print(f'Best score: {grid_search.best_score_:.3f}')
+                ```
+                </textarea>
+            </section>
+
+            <!-- Slide 17: Model Evaluation -->
+            <section data-markdown>
+                <textarea data-template>
+                ## Model Evaluation
+
+                ```python
+                from sklearn.metrics import (classification_report, 
+                                           confusion_matrix, accuracy_score)
+
+                # Evaluate model
+                accuracy = accuracy_score(y_test, y_pred)
+                print(f'Accuracy: {accuracy:.3f}')
+
+                # Confusion matrix
+                cm = confusion_matrix(y_test, y_pred)
+                print('Confusion Matrix:')
+                print(cm)
+
+                # Classification report
+                report = classification_report(y_test, y_pred, 
+                                             target_names=iris.target_names)
+                print('Classification Report:')
+                print(report)
+                ```
+                </textarea>
+            </section>
+
+            <!-- Slide 18: Advantages and Disadvantages -->
+            <section data-markdown>
+                <textarea data-template>
+                ## SVM: Pros and Cons
+
+                **Advantages**:
+                - Effective in high dimensions
+                - Memory efficient (uses support vectors only)
+                - Versatile (different kernels)
+                - Works well with clear margin of separation
+
+                **Disadvantages**:
+                - Poor performance on large datasets
+                - Sensitive to feature scaling
+                - No probabilistic output
+                - Choice of kernel and parameters critical
+                </textarea>
+            </section>
+
+            <!-- Slide 19: Practical Tips -->
+            <section data-markdown>
+                <textarea data-template>
+                ## Practical Tips
+
+                **Data Preprocessing**:
+                - **Always scale features** (StandardScaler, MinMaxScaler)
+                - Handle missing values
+                - Consider feature selection for high-dimensional data
+
+                **Model Selection**:
+                - Start with RBF kernel
+                - Use cross-validation for parameter tuning
+                - Consider linear kernel for text data/sparse features
+
+                **Performance**:
+                - For large datasets, consider LinearSVC
+                - Use probability=True if you need probabilities
+                </textarea>
+            </section>
+
+            <!-- Slide 20: Exercise 1 -->
+            <!-- <section data-markdown>
+                <textarea data-template>
+                ## Exercise 1: Theory
+
+                **Problem**: Derive the dual problem for SVM using Lagrange multipliers
+
+                **Steps**:
+                1. Write the Lagrangian for the primal problem
+                2. Apply KKT conditions
+                3. Substitute back to get dual formulation
+                4. Identify the role of support vectors
+
+                **Difficulty**: Hard  
+                **Time**: 20 minutes
+                </textarea>
+            </section> -->
+
+            <!-- Slide 21: Exercise 2 -->
+            <section data-markdown>
+                <textarea data-template>
+                ## Exercise: Implementation
+
+                **Problem**: Compare SVM kernels on wine dataset
+
+                **Tasks**:
+                1. Load wine dataset from scikit-learn
+                2. Implement SVM with linear, polynomial, and RBF kernels
+                3. Compare accuracy using cross-validation
+                4. Plot learning curves for each kernel
+
+                </textarea>
+            </section>
+
+            <!-- Slide 22: Exercise 3 -->
+            <!-- <section data-markdown>
+                <textarea data-template>
+                ## Exercise 3: Hyperparameter Tuning
+
+                **Problem**: Find optimal parameters for breast cancer dataset
+
+                **Tasks**:
+                1. Load breast cancer dataset
+                2. Perform grid search on C and gamma parameters
+                3. Use 5-fold cross-validation
+                4. Plot validation curves
+                5. Evaluate final model on test set
+
+                **Difficulty**: Easy  
+                **Time**: 25 minutes
+                </textarea>
+            </section> -->
+
+            <!-- Slide 23: Homework Assignment -->
+            <section data-markdown>
+                <textarea data-template>
+                ## Homework: Iris Dataset Analysis
+
+                **Dataset**: Iris Dataset (150 samples, 4 features, 3 classes)
+
+                **Tasks**:
+                1. Load iris dataset and split data (70/30)
+                2. Implement SVM with linear, polynomial, and RBF kernels
+                3. Compare performance using accuracy, precision, recall, F1-score
+                4. Visualize decision boundaries for 2D projections
+                5. Perform hyperparameter tuning using GridSearchCV
+                6. Create confusion matrices for each kernel
+                7. Write analysis report comparing results
+
+                **Due**: Next week
+                </textarea>
+            </section>
+
+            <!-- Slide 24: Homework Deliverables -->
+            <!-- <section data-markdown>
+                <textarea data-template>
+                ## Homework Deliverables
+
+                **Submit**:
+                1. **Python notebook** with complete implementation
+                2. **Performance comparison table** with all metrics
+                3. **Visualizations** of decision boundaries
+                4. **Written analysis report** (2-3 pages)
+
+                **Grading Criteria**:
+                - Code quality and documentation (30%)
+                - Correct implementation (30%)
+                - Analysis and insights (25%)
+                - Visualization quality (15%)
+
+                **Submission**: Upload to course portal
+                </textarea>
+            </section> -->
+
+            <!-- Slide 25: Summary -->
+            <section data-markdown>
+                <textarea data-template>
+                ## Summary
+
+                **Key Takeaways**:
+                - SVM finds optimal hyperplane by maximizing margin
+                - Kernel trick enables non-linear classification
+                - C parameter controls bias-variance tradeoff
+                - Gamma parameter affects model complexity in RBF kernel
+                - Feature scaling is crucial for SVM performance
+
+                <!-- **Next Lecture**: Ensemble Methods - Random Forest & Gradient Boosting -->
+
+                **Questions?**
+                </textarea>
+            </section>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.3.1/reveal.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.3.1/plugin/markdown/markdown.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.3.1/plugin/highlight/highlight.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.3.1/plugin/math/math.min.js"></script>
+    <script src="app.js"></script>
+</body>
+</html>

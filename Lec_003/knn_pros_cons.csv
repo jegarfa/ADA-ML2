@@ -1,0 +1,9 @@
+Advantages,Disadvantages
+Simple and intuitive algorithm,Computationally expensive for large datasets
+No assumptions about data distribution,Sensitive to irrelevant features
+Can be used for both classification and regression,Sensitive to the scale of features
+Adapts well to new data,Performance degrades in high dimensions (curse of dimensionality)
+Effective for small to medium datasets,Difficult to choose optimal k value
+No training period required (lazy learning),Memory intensive (stores entire dataset)
+Can handle multi-class problems naturally,Slow prediction time
+Robust to outliers with appropriate k,Sensitive to local structure of data

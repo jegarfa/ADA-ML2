@@ -1,0 +1,6 @@
+Distance Metric,Formula,Best Use Case,Characteristics
+Euclidean,√(Σ(xi-yi)²),"Continuous features, normal distribution","Most common, straight-line distance"
+Manhattan,Σ|xi-yi|,"High dimensions, grid-like data",Less sensitive to outliers
+Minkowski,(Σ|xi-yi|^p)^(1/p),"Flexible metric, various distributions",Generalizes Euclidean and Manhattan
+Chebyshev,max|xi-yi|,When max difference matters most,Focus on largest difference
+Cosine,1 - (x·y)/(||x||·||y||),"Text data, high-dimensional sparse data","Measures angle, not magnitude"

@@ -1,0 +1,503 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Decision Trees - Machine Learning Course</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="presentation-container">
+        <!-- Header -->
+        <header class="presentation-header">
+            <div class="header-content">
+                <h1 class="course-title">Machine Learning Course</h1>
+                <div class="slide-counter">
+                    <span id="current-slide">1</span> / <span id="total-slides">16</span>
+                </div>
+            </div>
+            <div class="progress-bar">
+                <div class="progress-fill" id="progress-fill"></div>
+            </div>
+        </header>
+
+        <!-- Slides Container -->
+        <main class="slides-container">
+            <!-- Slide 1: Title -->
+            <section class="slide active" data-slide="1">
+                <div class="slide-content title-slide">
+                    <h1>Decision Trees</h1>
+                    <h2>Machine Learning Course</h2>
+                    <p class="subtitle">For Mathematics and Data Science Students</p>
+                    <div class="course-info">
+                        <p>A comprehensive introduction to decision tree algorithms, mathematical foundations, and practical applications</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Slide 2: Learning Objectives -->
+            <section class="slide" data-slide="2">
+                <div class="slide-content">
+                    <h2>Learning Objectives</h2>
+                    <ul class="objectives-list">
+                        <li>Understand the structure and components of decision trees</li>
+                        <li>Master mathematical foundations: entropy, Gini index, information gain</li>
+                        <li>Learn algorithms for constructing decision trees</li>
+                        <li>Distinguish between classification and regression trees</li>
+                        <li>Understand overfitting and pruning techniques</li>
+                        <li>Apply decision trees to real-world problems</li>
+                    </ul>
+                </div>
+            </section>
+
+            <!-- Slide 3: What are Decision Trees? -->
+            <section class="slide" data-slide="3">
+                <div class="slide-content">
+                    <h2>What are Decision Trees?</h2>
+                    <p class="main-content">Decision trees are supervised learning algorithms that model decisions through a tree-like structure. They recursively partition the feature space based on attribute values to make predictions.</p>
+                    
+                    <div class="definition-box">
+                        <h3>Definition</h3>
+                        <p>A decision tree is a flowchart-like structure where internal nodes represent tests on attributes, branches represent outcomes of tests, and leaf nodes represent class labels or continuous values.</p>
+                    </div>
+
+                    <div class="visual-container">
+                        <img src="https://pplx-res.cloudinary.com/image/upload/v1754835992/pplx_project_search_images/d6ee8662cb4ae852bd484c5f26a4204b52a4a867.png" alt="Decision Tree Components Diagram" class="slide-image">
+                    </div>
+                </div>
+            </section>
+
+            <!-- Slide 4: Decision Tree Components -->
+            <section class="slide" data-slide="4">
+                <div class="slide-content">
+                    <h2>Decision Tree Components</h2>
+                    <div class="components-grid">
+                        <div class="component-card">
+                            <h3>Root Node</h3>
+                            <p>The topmost node representing the entire dataset</p>
+                        </div>
+                        <div class="component-card">
+                            <h3>Internal Nodes</h3>
+                            <p>Decision nodes that test attribute values</p>
+                        </div>
+                        <div class="component-card">
+                            <h3>Leaf Nodes</h3>
+                            <p>Terminal nodes containing final predictions</p>
+                        </div>
+                        <div class="component-card">
+                            <h3>Branches</h3>
+                            <p>Connections between nodes representing decision paths</p>
+                        </div>
+                        <div class="component-card">
+                            <h3>Splitting</h3>
+                            <p>The process of dividing nodes based on attribute tests</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Slide 5: Mathematical Foundations - Entropy -->
+            <section class="slide" data-slide="5">
+                <div class="slide-content">
+                    <h2>Mathematical Foundations - Entropy</h2>
+                    <p>Entropy measures the impurity or disorder in a dataset. It quantifies the uncertainty in predicting the class of a randomly chosen sample.</p>
+                    
+                    <div class="formula-box">
+                        <h3>Entropy Formula</h3>
+                        <div class="formula">H(S) = -Σ p<sub>i</sub> log₂(p<sub>i</sub>)</div>
+                        <p class="formula-note">where p<sub>i</sub> is the proportion of samples belonging to class i</p>
+                    </div>
+
+                    <div class="properties-section">
+                        <h3>Properties</h3>
+                        <ul>
+                            <li>Range: [0, log₂(k)] where k is number of classes</li>
+                            <li>H(S) = 0 when all samples belong to one class (pure)</li>
+                            <li>H(S) is maximum when classes are equally distributed</li>
+                        </ul>
+                    </div>
+
+                    <button class="interactive-btn" onclick="toggleExample('entropy-example')">Show Calculation Example</button>
+                    <div id="entropy-example" class="example-section hidden">
+                        <h4>Example: 6 positive, 4 negative samples</h4>
+                        <div class="calculation">
+                            H = -(6/10)log₂(6/10) - (4/10)log₂(4/10) = 0.971
+                        </div>
+                        <p>High entropy indicates mixed classes</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Slide 6: Mathematical Foundations - Gini Index -->
+            <section class="slide" data-slide="6">
+                <div class="slide-content">
+                    <h2>Mathematical Foundations - Gini Index</h2>
+                    <p>The Gini index measures impurity based on the probability of misclassifying a randomly chosen sample.</p>
+                    
+                    <div class="formula-box">
+                        <h3>Gini Index Formula</h3>
+                        <div class="formula">Gini(S) = 1 - Σ p<sub>i</sub>²</div>
+                    </div>
+
+                    <div class="properties-section">
+                        <h3>Properties</h3>
+                        <ul>
+                            <li>Range: [0, 1-1/k] where k is number of classes</li>
+                            <li>For binary classification: Gini ∈ [0, 0.5]</li>
+                            <li>Gini = 0 for pure nodes</li>
+                            <li>Computationally more efficient than entropy</li>
+                        </ul>
+                    </div>
+
+                    <div class="visual-container">
+                        <img src="https://ppl-ai-code-interpreter-files.s3.amazonaws.com/web/direct-files/e8e55b42cf8dff57ae056a346bf8a453/016ababa-934f-426d-a82e-ef9cc00bcb6a/5a07f114.png" alt="Entropy vs Gini Comparison" class="slide-image">
+                    </div>
+
+                    <button class="interactive-btn" onclick="toggleExample('gini-example')">Show Calculation Example</button>
+                    <div id="gini-example" class="example-section hidden">
+                        <h4>Example: 6 positive, 4 negative samples</h4>
+                        <div class="calculation">
+                            Gini = 1 - (6/10)² - (4/10)² = 1 - 0.36 - 0.16 = 0.48
+                        </div>
+                        <p>Moderate impurity</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Slide 7: Information Gain -->
+            <section class="slide" data-slide="7">
+                <div class="slide-content">
+                    <h2>Information Gain and Splitting Criteria</h2>
+                    <p>Information Gain measures the effectiveness of an attribute in classifying the training data. It's the reduction in entropy after splitting.</p>
+                    
+                    <div class="formula-box">
+                        <h3>Information Gain Formula</h3>
+                        <div class="formula">IG(S,A) = H(S) - Σ |S<sub>v</sub>|/|S| × H(S<sub>v</sub>)</div>
+                    </div>
+
+                    <div class="algorithm-section">
+                        <h3>Splitting Algorithm</h3>
+                        <ol>
+                            <li>Calculate entropy/Gini for parent node</li>
+                            <li>For each attribute, calculate weighted entropy of child nodes</li>
+                            <li>Compute information gain = parent_impurity - weighted_child_impurity</li>
+                            <li>Select attribute with highest information gain</li>
+                        </ol>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Slide 8: Decision Tree Algorithm -->
+            <section class="slide" data-slide="8">
+                <div class="slide-content">
+                    <h2>Decision Tree Algorithm</h2>
+                    
+                    <div class="algorithm-section">
+                        <h3>Building Algorithm Steps</h3>
+                        <ol>
+                            <li>Start with root node containing all training samples</li>
+                            <li>Calculate impurity measure for current node</li>
+                            <li>For each attribute, evaluate all possible splits</li>
+                            <li>Choose split that maximizes information gain</li>
+                            <li>Create child nodes and partition samples</li>
+                            <li>Recursively apply algorithm to child nodes</li>
+                            <li>Stop when stopping criteria are met</li>
+                        </ol>
+                    </div>
+
+                    <div class="criteria-section">
+                        <h3>Stopping Criteria</h3>
+                        <ul>
+                            <li>All samples in node belong to same class</li>
+                            <li>No more attributes to split on</li>
+                            <li>Minimum samples threshold reached</li>
+                            <li>Maximum depth reached</li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Slide 9: Classification vs Regression Trees -->
+            <section class="slide" data-slide="9">
+                <div class="slide-content">
+                    <h2>Classification vs Regression Trees</h2>
+                    
+                    <div class="comparison-grid">
+                        <div class="comparison-card">
+                            <h3>Classification Trees</h3>
+                            <ul>
+                                <li>Predict discrete class labels</li>
+                                <li>Use entropy or Gini index</li>
+                                <li>Leaf nodes contain class predictions</li>
+                                <li>Majority vote in leaf nodes</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="comparison-card">
+                            <h3>Regression Trees</h3>
+                            <ul>
+                                <li>Predict continuous numerical values</li>
+                                <li>Use variance or mean squared error</li>
+                                <li>Leaf nodes contain mean values</li>
+                                <li>Average of target values in leaf nodes</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="formula-section">
+                        <h3>Regression Tree Splitting Criteria</h3>
+                        <div class="formula">MSE = (1/n) Σ (y<sub>i</sub> - ȳ)²</div>
+                        <p>Choose split that minimizes weighted MSE of child nodes</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Slide 10: Example Classification Tree -->
+            <section class="slide" data-slide="10">
+                <div class="slide-content">
+                    <h2>Example: Classification Tree Construction</h2>
+                    
+                    <div class="example-container">
+                        <h3>Tennis Playing Decision</h3>
+                        <p>Dataset: Weather conditions and play tennis (Yes/No)</p>
+                        
+                        <button class="interactive-btn" onclick="toggleExample('tennis-tree')">Build Decision Tree Step by Step</button>
+                        
+                        <div id="tennis-tree" class="example-section hidden">
+                            <div class="tree-construction">
+                                <h4>Step 1: Calculate root entropy</h4>
+                                <p>9 Yes, 5 No → H = 0.940</p>
+                                
+                                <h4>Step 2: Evaluate splits</h4>
+                                <ul>
+                                    <li>Outlook: IG = 0.247</li>
+                                    <li>Temperature: IG = 0.029</li>
+                                    <li>Humidity: IG = 0.152</li>
+                                    <li>Wind: IG = 0.048</li>
+                                </ul>
+                                
+                                <h4>Step 3: Choose Outlook (highest IG)</h4>
+                                <p>Creates three branches: Sunny, Overcast, Rain</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Slide 11: Regression Tree Example -->
+            <section class="slide" data-slide="11">
+                <div class="slide-content">
+                    <h2>Example: Regression Tree</h2>
+                    
+                    <div class="example-container">
+                        <h3>House Price Prediction</h3>
+                        <p>Predict house prices based on size, location, age</p>
+                        
+                        <div class="regression-example">
+                            <h4>Splitting Process</h4>
+                            <ol>
+                                <li>Calculate MSE for current node</li>
+                                <li>Try all possible splits on each feature</li>
+                                <li>Choose split that minimizes weighted MSE</li>
+                                <li>Continue recursively</li>
+                            </ol>
+                            
+                            <div class="split-example">
+                                <h4>Example Split: House Size</h4>
+                                <p>Split at 1500 sq ft:</p>
+                                <ul>
+                                    <li>Left: Size ≤ 1500 → Mean price: $200k</li>
+                                    <li>Right: Size > 1500 → Mean price: $350k</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Slide 12: Overfitting -->
+            <section class="slide" data-slide="12">
+                <div class="slide-content">
+                    <h2>Overfitting in Decision Trees</h2>
+                    
+                    <p>Decision trees can easily overfit by creating overly complex models that memorize the training data.</p>
+                    
+                    <div class="overfitting-causes">
+                        <h3>Causes of Overfitting</h3>
+                        <ul>
+                            <li>Trees grown too deep</li>
+                            <li>Very small minimum samples per leaf</li>
+                            <li>No regularization constraints</li>
+                            <li>Noisy or small datasets</li>
+                        </ul>
+                    </div>
+
+                    <div class="visual-container">
+                        <img src="https://ppl-ai-code-interpreter-files.s3.amazonaws.com/web/direct-files/e8e55b42cf8dff57ae056a346bf8a453/e38df138-f1d5-4bad-9824-b8502d0d48c4/9db5e09d.png" alt="Overfitting Chart" class="slide-image">
+                    </div>
+
+                    <div class="signs-section">
+                        <h3>Signs of Overfitting</h3>
+                        <ul>
+                            <li>High training accuracy, low validation accuracy</li>
+                            <li>Very deep trees with many leaves</li>
+                            <li>Poor generalization to new data</li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Slide 13: Pruning Techniques -->
+            <section class="slide" data-slide="13">
+                <div class="slide-content">
+                    <h2>Pruning Techniques</h2>
+                    
+                    <div class="pruning-types">
+                        <div class="pruning-card">
+                            <h3>Pre-pruning (Early Stopping)</h3>
+                            <ul>
+                                <li>Maximum tree depth</li>
+                                <li>Minimum samples per leaf</li>
+                                <li>Minimum samples per split</li>
+                                <li>Maximum leaf nodes</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="pruning-card">
+                            <h3>Post-pruning</h3>
+                            <ul>
+                                <li>Build full tree first</li>
+                                <li>Remove branches that don't improve validation performance</li>
+                                <li>Cost complexity pruning (α-pruning)</li>
+                                <li>Reduced error pruning</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="cost-complexity">
+                        <h3>Cost Complexity Pruning</h3>
+                        <div class="formula">Cost(T) = Error(T) + α × |Leaves(T)|</div>
+                        <p>Find subtree that minimizes cost function</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Slide 14: Advantages and Disadvantages -->
+            <section class="slide" data-slide="14">
+                <div class="slide-content">
+                    <h2>Advantages and Disadvantages</h2>
+                    
+                    <div class="pros-cons-grid">
+                        <div class="pros-section">
+                            <h3>Advantages</h3>
+                            <ul>
+                                <li>Easy to understand and interpret</li>
+                                <li>No assumptions about data distribution</li>
+                                <li>Handles both numerical and categorical data</li>
+                                <li>Automatic feature selection</li>
+                                <li>Fast prediction</li>
+                                <li>Handles missing values naturally</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="cons-section">
+                            <h3>Disadvantages</h3>
+                            <ul>
+                                <li>Prone to overfitting</li>
+                                <li>Unstable (small data changes → different trees)</li>
+                                <li>Biased toward features with more levels</li>
+                                <li>Difficulty with linear relationships</li>
+                                <li>Can create overly complex trees</li>
+                                <li>May not perform well with continuous numerical data</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Slide 15: Practical Exercises -->
+            <section class="slide" data-slide="15">
+                <div class="slide-content">
+                    <h2>Practical Exercises</h2>
+                    
+                    <div class="exercises-container">
+                        <div class="exercise-card">
+                            <h3>Exercise 1: Entropy Calculation</h3>
+                            <p>Calculate entropy for a node with 8 positive and 2 negative samples</p>
+                            <button class="interactive-btn" onclick="toggleSolution('exercise1')">Show Solution</button>
+                            <div id="exercise1" class="solution hidden">
+                                <p>H = -(8/10)log₂(8/10) - (2/10)log₂(2/10) = 0.722</p>
+                            </div>
+                        </div>
+                        
+                        <div class="exercise-card">
+                            <h3>Exercise 2: Gini Comparison</h3>
+                            <p>Which split is better: Node A (Gini=0.3) or Node B (Gini=0.45)?</p>
+                            <button class="interactive-btn" onclick="toggleSolution('exercise2')">Show Solution</button>
+                            <div id="exercise2" class="solution hidden">
+                                <p>Node A is better - lower Gini means higher purity</p>
+                            </div>
+                        </div>
+                        
+                        <div class="exercise-card">
+                            <h3>Exercise 3: Information Gain</h3>
+                            <p>Calculate Information Gain for a binary split with parent entropy 0.8 and child entropies 0.6 (60% samples) and 0.4 (40% samples)</p>
+                            <button class="interactive-btn" onclick="toggleSolution('exercise3')">Show Solution</button>
+                            <div id="exercise3" class="solution hidden">
+                                <p>IG = 0.8 - (0.6×0.6 + 0.4×0.4) = 0.8 - 0.52 = 0.28</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Slide 16: Summary -->
+            <section class="slide" data-slide="16">
+                <div class="slide-content">
+                    <h2>Summary and Key Takeaways</h2>
+                    
+                    <div class="summary-grid">
+                        <div class="key-point">
+                            <h3>🌳 Tree Structure</h3>
+                            <p>Decision trees use hierarchical rules to make predictions through intuitive tree structures</p>
+                        </div>
+                        
+                        <div class="key-point">
+                            <h3>📊 Mathematical Foundation</h3>
+                            <p>Entropy, Gini index, and Information Gain provide the mathematical basis for optimal splitting</p>
+                        </div>
+                        
+                        <div class="key-point">
+                            <h3>⚖️ Bias-Variance Trade-off</h3>
+                            <p>Balance between model complexity and generalization through proper pruning</p>
+                        </div>
+                        
+                        <div class="key-point">
+                            <h3>🔧 Practical Applications</h3>
+                            <p>Suitable for both classification and regression tasks with interpretable results</p>
+                        </div>
+                    </div>
+
+                    <div class="next-steps">
+                        <h3>Next Steps</h3>
+                        <ul>
+                            <li>Explore ensemble methods (Random Forests, Gradient Boosting)</li>
+                            <li>Practice with real datasets</li>
+                            <li>Compare with other ML algorithms</li>
+                            <li>Study advanced pruning techniques</li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <!-- Navigation -->
+        <nav class="navigation">
+            <button id="prev-btn" class="nav-btn btn btn--secondary">← Previous</button>
+            <button id="next-btn" class="nav-btn btn btn--primary">Next →</button>
+        </nav>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>

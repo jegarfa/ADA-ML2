@@ -1,0 +1,9 @@
+Domain,Application,Example
+Computer Vision,"Image classification, object recognition",Classifying handwritten digits (MNIST)
+Recommendation Systems,Movie/product recommendations,Netflix movie recommendations
+Finance,"Credit scoring, fraud detection",Detecting fraudulent transactions
+Healthcare,"Disease diagnosis, drug discovery",Predicting patient outcomes
+Text Mining,"Document classification, sentiment analysis",Spam email detection
+Image Processing,"Image similarity, face recognition",Finding similar product images
+E-commerce,"Customer segmentation, price prediction",Recommending products to customers
+Bioinformatics,"Gene classification, protein analysis",Identifying genetic markers

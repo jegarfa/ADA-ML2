@@ -1,0 +1,6 @@
+Step,Description,Purpose
+1,Choose the number k of neighbors,Hyperparameter selection
+2,Calculate distance between query instance and all training samples,Similarity measurement
+3,Sort distances and determine nearest k neighbors,Find most similar instances
+4,Gather the labels of the nearest k neighbors,Collect neighbor information
+5,Use majority vote (classification) or average (regression) to predict,Make final prediction

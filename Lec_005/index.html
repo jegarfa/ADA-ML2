@@ -1,0 +1,624 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Principal Component Analysis (PCA) - ML Course</title>
+    
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@4.3.1/dist/reveal.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@4.3.1/dist/theme/white.css" id="theme">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@4.3.1/plugin/highlight/monokai.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="reveal">
+        <div class="slides">
+            <!-- Title Slide -->
+            <section data-markdown>
+                <textarea data-template>
+                # Principal Component Analysis (PCA)
+                ## Methods and Algorithms in Machine Learning
+                ### Using scikit-learn Python
+
+                For Mathematics Students
+                
+                Course: Machine Learning Methods and Algorithms
+                </textarea>
+            </section>
+
+            <!-- Table of Contents -->
+            <section data-markdown>
+                <textarea data-template>
+                ## Table of Contents
+                
+                1. **What is PCA?**
+                2. **Mathematical Foundation** 
+                3. **Algorithm Steps**
+                4. **Implementation in scikit-learn**
+                5. **Example: Iris Dataset**
+                6. **Exercises**
+                7. **Homework Assignment**
+                </textarea>
+            </section>
+
+            <!-- Introduction Section -->
+            <section>
+                <section data-markdown>
+                    <textarea data-template>
+                    ## What is PCA?
+                    
+                    **Principal Component Analysis** is a dimensionality reduction technique that:
+                    
+                    - <!-- .element: class="fragment" --> Transforms data to lower dimensional space
+                    - <!-- .element: class="fragment" --> Preserves maximum variance in the data
+                    - <!-- .element: class="fragment" --> Creates uncorrelated principal components
+                    - <!-- .element: class="fragment" --> Identifies directions of maximum variability
+                    
+                    <!-- .element: class="fragment" --> 🎯 **Goal**: Find the best low-dimensional representation of high-dimensional data
+                    </textarea>
+                </section>
+
+                <section data-markdown>
+                    <textarea data-template>
+                    ## Why Use Dimensionality Reduction?
+                    
+                    **Problems with High-Dimensional Data:**
+                    - <!-- .element: class="fragment" --> **Curse of dimensionality** - exponential growth in data complexity
+                    - <!-- .element: class="fragment" --> **Computational cost** - storage and processing requirements
+                    - <!-- .element: class="fragment" --> **Visualization** - impossible to plot >3D data
+                    - <!-- .element: class="fragment" --> **Noise** - many dimensions may contain irrelevant information
+                    
+                    **Benefits of PCA:**
+                    - <!-- .element: class="fragment" --> Reduces computational complexity
+                    - <!-- .element: class="fragment" --> Removes redundant information
+                    - <!-- .element: class="fragment" --> Enables data visualization
+                    - <!-- .element: class="fragment" --> Can improve machine learning performance
+                    </textarea>
+                </section>
+
+                <section data-markdown>
+                    <textarea data-template>
+                    ## When to Use PCA?
+                    
+                    **Good candidates:**
+                    - <!-- .element: class="fragment" --> High-dimensional numerical data
+                    - <!-- .element: class="fragment" --> Features with linear correlations
+                    - <!-- .element: class="fragment" --> Data with redundant measurements
+                    - <!-- .element: class="fragment" --> Preprocessing for ML algorithms
+                    
+                    **Not suitable when:**
+                    - <!-- .element: class="fragment" --> Categorical data
+                    - <!-- .element: class="fragment" --> Interpretability is crucial
+                    - <!-- .element: class="fragment" --> Non-linear relationships dominate
+                    - <!-- .element: class="fragment" --> All features are equally important
+                    </textarea>
+                </section>
+
+                <section data-markdown>
+                    <textarea data-template>
+                    ## Real-World Applications
+                    
+                    - <!-- .element: class="fragment" --> **Image Processing**: Face recognition, compression
+                    - <!-- .element: class="fragment" --> **Finance**: Portfolio analysis, risk management
+                    - <!-- .element: class="fragment" --> **Genetics**: Gene expression analysis
+                    - <!-- .element: class="fragment" --> **Marketing**: Customer segmentation
+                    - <!-- .element: class="fragment" --> **Quality Control**: Manufacturing process monitoring
+                    - <!-- .element: class="fragment" --> **Neuroscience**: Brain imaging analysis
+                    </textarea>
+                </section>
+            </section>
+
+            <!-- Mathematical Foundation -->
+            <section>
+                <section data-markdown>
+                    <textarea data-template>
+                    ## Mathematical Foundation
+                    ### Covariance Matrix
+                    
+                    Given data matrix $X \in \mathbb{R}^{n \times p}$ (n samples, p features):
+                    
+                    **Sample Covariance Matrix:**
+                    $$C = \frac{1}{n-1} X^T X$$
+                    
+                    where $X$ is centered: $X_{centered} = X - \bar{X}$
+                    
+                    <!-- .element: class="fragment" --> **Properties:**
+                    - $C_{ij}$ measures linear relationship between features $i$ and $j$
+                    - $C$ is symmetric and positive semi-definite
+                    - Diagonal elements are variances: $C_{ii} = \text{Var}(X_i)$
+                    </textarea>
+                </section>
+
+                <section data-markdown>
+                    <textarea data-template>
+                    ## Eigenvalues and Eigenvectors
+                    
+                    For covariance matrix $C$, we solve:
+                    $$C \mathbf{v} = \lambda \mathbf{v}$$
+                    
+                    <!-- .element: class="fragment" --> **Where:**
+                    - $\mathbf{v}$ are **eigenvectors** (principal components)
+                    - $\lambda$ are **eigenvalues** (variance explained)
+                    
+                    <!-- .element: class="fragment" --> **Key Properties:**
+                    - Eigenvectors are orthogonal: $\mathbf{v}_i^T \mathbf{v}_j = 0$ for $i \neq j$
+                    - Eigenvalues indicate importance: $\lambda_1 \geq \lambda_2 \geq ... \geq \lambda_p \geq 0$
+                    - Total variance: $\sum_{i=1}^p \lambda_i = \text{trace}(C)$
+                    </textarea>
+                </section>
+
+                <section data-markdown>
+                    <textarea data-template>
+                    ## Mathematical Formulation
+                    
+                    **PCA Transformation:**
+                    $$Y = X \cdot W$$
+                    
+                    where $W = [\mathbf{v}_1, \mathbf{v}_2, ..., \mathbf{v}_k]$ contains top $k$ eigenvectors
+                    
+                    <!-- .element: class="fragment" --> **Dimensionality Reduction:**
+                    - Original: $X \in \mathbb{R}^{n \times p}$
+                    - Transformed: $Y \in \mathbb{R}^{n \times k}$ where $k < p$
+                    
+                    <!-- .element: class="fragment" --> **Reconstruction:**
+                    $$\hat{X} = Y \cdot W^T = X \cdot W \cdot W^T$$
+                    </textarea>
+                </section>
+
+                <section data-markdown>
+                    <textarea data-template>
+                    ## Principal Components Definition
+                    
+                    **First Principal Component:**
+                    - Direction of maximum variance in the data
+                    - $\mathbf{v}_1 = \arg\max_\{\|\mathbf{v}\|=1\} \text{Var}(X\mathbf{v})$
+                    
+                    <!-- .element: class="fragment" --> **Second Principal Component:**
+                    - Direction of maximum variance orthogonal to PC1
+                    - $\mathbf{v}_2 = \arg\max_\{\|\mathbf{v}\|=1, \mathbf{v} \perp \mathbf{v}_1\} \text{Var}(X\mathbf{v})$
+                    
+                    <!-- .element: class="fragment" --> **And so on...**
+                    
+                    <!-- .element: class="fragment" --> **Variance Explained:**
+                    $$\text{Explained Variance Ratio} = \frac{\lambda_i}{\sum_{j=1}^p \lambda_j}$$
+                    </textarea>
+                </section>
+
+                <section data-markdown>
+                    <textarea data-template>
+                    ## Variance Maximization Interpretation
+                    
+                    PCA finds the linear transformation that:
+                    
+                    1. <!-- .element: class="fragment" --> **Maximizes variance** in the projected data
+                    2. <!-- .element: class="fragment" --> **Minimizes reconstruction error**
+                    3. <!-- .element: class="fragment" --> **Decorrelates** the transformed features
+                    
+                    <!-- .element: class="fragment" --> **Optimization Problem:**
+                    $$\max_{\mathbf{w}} \mathbf{w}^T C \mathbf{w} \quad \text{subject to} \quad \|\mathbf{w}\| = 1$$
+                    
+                    <!-- .element: class="fragment" --> Solution: $\mathbf{w}$ is the eigenvector with largest eigenvalue
+                    </textarea>
+                </section>
+            </section>
+
+            <!-- Algorithm Steps -->
+            <section>
+                <section data-markdown>
+                    <textarea data-template>
+                    ## PCA Algorithm - Step by Step
+                    
+                    **Input:** Data matrix $X \in \mathbb{R}^{n \times p}$
+                    
+                    **Steps:**
+                    1. <!-- .element: class="fragment" --> **Standardize** the data
+                    2. <!-- .element: class="fragment" --> **Compute** covariance matrix
+                    3. <!-- .element: class="fragment" --> **Find** eigenvalues and eigenvectors
+                    4. <!-- .element: class="fragment" --> **Sort** by eigenvalue magnitude
+                    5. <!-- .element: class="fragment" --> **Select** top k components
+                    6. <!-- .element: class="fragment" --> **Transform** the data
+                    </textarea>
+                </section>
+
+                <section data-markdown>
+                    <textarea data-template>
+                    ## Step 1: Data Standardization
+                    
+                    **Why standardize?**
+                    - Features with larger scales dominate PCA
+                    - Ensures equal contribution from all features
+                    
+                    **Standardization formula:**
+                    $$X_{std} = \frac{X - \mu}{\sigma}$$
+                    
+                    where $\mu$ is the mean and $\sigma$ is the standard deviation for each feature
+                    
+                    <!-- .element: class="fragment" --> **Alternative:** Center the data (subtract mean only)
+                    $$X_{centered} = X - \bar{X}$$
+                    </textarea>
+                </section>
+
+                <section data-markdown>
+                    <textarea data-template>
+                    ## Steps 2-4: Covariance & Eigendecomposition
+                    
+                    **Covariance Matrix:**
+                    ```python
+                    C = np.cov(X_std.T)  # Shape: (p, p)
+                    ```
+                    
+                    **Eigendecomposition:**
+                    ```python
+                    eigenvals, eigenvecs = np.linalg.eigh(C)
+                    ```
+                    
+                    **Sort by eigenvalue (descending):**
+                    ```python
+                    idx = eigenvals.argsort()[::-1]
+                    eigenvals = eigenvals[idx]
+                    eigenvecs = eigenvecs[:, idx]
+                    ```
+                    </textarea>
+                </section>
+
+                <section data-markdown>
+                    <textarea data-template>
+                    ## Steps 5-6: Component Selection & Transformation
+                    
+                    **Select top k components:**
+                    ```python
+                    k = 2  # Number of components
+                    W = eigenvecs[:, :k]  # Shape: (p, k)
+                    ```
+                    
+                    **Transform data:**
+                    ```python
+                    Y = X_std @ W  # Shape: (n, k)
+                    ```
+                    
+                    **Explained variance:**
+                    ```python
+                    explained_var = eigenvals[:k] / np.sum(eigenvals)
+                    ```
+                    </textarea>
+                </section>
+            </section>
+
+            <!-- Scikit-learn Implementation -->
+            <section>
+                <section data-markdown>
+                    <textarea data-template>
+                    ## Scikit-learn Implementation
+                    
+                    **Import and Basic Usage:**
+                    ```python
+                    from sklearn.decomposition import PCA
+                    from sklearn.preprocessing import StandardScaler
+                    
+                    # Standardize data
+                    scaler = StandardScaler()
+                    X_scaled = scaler.fit_transform(X)
+                    
+                    # Apply PCA
+                    pca = PCA(n_components=2)
+                    X_pca = pca.fit_transform(X_scaled)
+                    ```
+                    </textarea>
+                </section>
+
+                <section data-markdown>
+                    <textarea data-template>
+                    ## PCA Class Parameters
+                    
+                    **Key Parameters:**
+                    ```python
+                    PCA(
+                        n_components=None,    # Number of components
+                        svd_solver='auto',    # Algorithm choice
+                        whiten=False,         # Whitening transformation
+                        random_state=None     # Reproducibility
+                    )
+                    ```
+                    
+                    **n_components options:**
+                    - <!-- .element: class="fragment" --> Integer: Exact number of components
+                    - <!-- .element: class="fragment" --> Float (0-1): Variance ratio to preserve
+                    - <!-- .element: class="fragment" --> 'mle': Maximum likelihood estimation
+                    - <!-- .element: class="fragment" --> None: Keep all components
+                    </textarea>
+                </section>
+
+                <section data-markdown>
+                    <textarea data-template>
+                    ## Fit and Transform Methods
+                    
+                    **Training:**
+                    ```python
+                    pca.fit(X_train)  # Learn PCA components
+                    ```
+                    
+                    **Transform:**
+                    ```python
+                    X_transformed = pca.transform(X_test)
+                    ```
+                    
+                    **Fit + Transform:**
+                    ```python
+                    X_pca = pca.fit_transform(X_train)
+                    ```
+                    
+                    **Inverse Transform:**
+                    ```python
+                    X_reconstructed = pca.inverse_transform(X_pca)
+                    ```
+                    </textarea>
+                </section>
+
+                <section data-markdown>
+                    <textarea data-template>
+                    ## Explained Variance Analysis
+                    
+                    **Useful attributes:**
+                    ```python
+                    # Variance explained by each component
+                    pca.explained_variance_ratio_
+                    
+                    # Cumulative variance explained
+                    np.cumsum(pca.explained_variance_ratio_)
+                    
+                    # Principal components (loadings)
+                    pca.components_
+                    
+                    # Eigenvalues
+                    pca.explained_variance_
+                    ```
+                    
+                    **Choosing number of components:**
+                    ```python
+                    # Keep 95% of variance
+                    pca = PCA(n_components=0.95)
+                    ```
+                    </textarea>
+                </section>
+            </section>
+
+            <!-- Iris Dataset Example -->
+            <section>
+                <section data-markdown>
+                    <textarea data-template>
+                    ## Example: Iris Dataset
+                    
+                    **Dataset Overview:**
+                    - 150 samples, 4 features
+                    - Features: sepal length, sepal width, petal length, petal width
+                    - 3 species: setosa, versicolor, virginica
+                    
+                    **Feature Statistics:**
+                    - Sepal Length: μ = 5.84, σ = 0.83
+                    - Sepal Width: μ = 3.06, σ = 0.43  
+                    - Petal Length: μ = 3.76, σ = 1.76
+                    - Petal Width: μ = 1.20, σ = 0.76
+                    </textarea>
+                </section>
+
+                <section>
+                    <h2>Original Data Visualization</h2>
+                    
+                    <div class="image-container">
+                        <img src="https://ppl-ai-code-interpreter-files.s3.amazonaws.com/web/direct-files/3709737a20b993326b174a65af4fc116/9371d57c-0477-4a97-b34a-327f4e68582e/2c5673b4.png" 
+                             alt="Iris Dataset Pairwise Scatter Plot" 
+                             style="width: 75%; height: auto; max-width: 800px;">
+                    </div>
+                    
+                    <p><strong>Observations:</strong></p>
+                    <ul>
+                        <li class="fragment">Strong correlation between petal length and petal width</li>
+                        <li class="fragment">Clear species separation in petal measurements</li>
+                        <li class="fragment">Sepal width shows different pattern</li>
+                    </ul>
+                </section>
+
+                <section data-markdown>
+                    <textarea data-template>
+                    ## Correlation Matrix Analysis
+                    
+                    |           | Sepal L | Sepal W | Petal L | Petal W |
+                    |-----------|---------|---------|---------|---------|
+                    | Sepal L   |  1.00   | -0.12   |  0.87   |  0.82   |
+                    | Sepal W   | -0.12   |  1.00   | -0.43   | -0.37   |
+                    | Petal L   |  0.87   | -0.43   |  1.00   |  0.96   |
+                    | Petal W   |  0.82   | -0.37   |  0.96   |  1.00   |
+                    
+                    <!-- .element: class="fragment" --> **Key Insights:**
+                    - High correlation between petal dimensions (0.96)
+                    - Strong correlation between sepal length and petal dimensions
+                    - Sepal width negatively correlated with other features
+                    </textarea>
+                </section>
+
+                <section>
+                    <h2>PCA Results: Explained Variance</h2>
+                    
+                    <div class="image-container">
+                        <img src="https://ppl-ai-code-interpreter-files.s3.amazonaws.com/web/direct-files/3709737a20b993326b174a65af4fc116/8d9e89cc-8cd1-40c1-8ccd-5027f12bcfaf/e3a8406e.png" 
+                             alt="PCA Explained Variance Chart" 
+                             style="width: 75%; height: auto; max-width: 800px;">
+                    </div>
+                    
+                    <p><strong>Component Analysis:</strong></p>
+                    <ul>
+                        <li class="fragment">PC1 explains 72.96% of variance</li>
+                        <li class="fragment">PC2 explains 22.85% of variance</li>
+                        <li class="fragment">First 2 components: 95.81% of total variance</li>
+                        <li class="fragment">3 components needed for 99% variance</li>
+                    </ul>
+                </section>
+
+                <section>
+                    <h2>2D PCA Visualization</h2>
+                    
+                    <div class="image-container">
+                        <img src="https://ppl-ai-code-interpreter-files.s3.amazonaws.com/web/direct-files/3709737a20b993326b174a65af4fc116/ae47e7d1-88dc-48ec-bab0-cb87d0404783/be90dcfe.png" 
+                             alt="2D PCA of Iris Dataset" 
+                             style="width: 75%; height: auto; max-width: 800px;">
+                    </div>
+                    
+                    <p><strong>Results:</strong></p>
+                    <ul>
+                        <li class="fragment">Clear separation of species in 2D space</li>
+                        <li class="fragment">Setosa completely separated</li>
+                        <li class="fragment">Some overlap between versicolor and virginica</li>
+                        <li class="fragment">Reconstruction error: 4.19%</li>
+                    </ul>
+                </section>
+
+                <section data-markdown>
+                    <textarea data-template>
+                    ## Principal Components Interpretation
+                    
+                    **PC1 Loadings:**
+                    - Sepal Length: 0.521
+                    - Sepal Width: -0.269
+                    - Petal Length: 0.580  
+                    - Petal Width: 0.565
+                    
+                    <!-- .element: class="fragment" --> **Interpretation:** PC1 contrasts sepal width against the other three measurements
+                    
+                    <!-- .element: class="fragment" --> **PC2 Loadings:**
+                    - Sepal Length: 0.377
+                    - Sepal Width: 0.923
+                    - Petal Length: 0.025
+                    - Petal Width: 0.067
+                    
+                    <!-- .element: class="fragment" --> **Interpretation:** PC2 mainly represents sepal width variation
+                    </textarea>
+                </section>
+            </section>
+
+            <!-- Exercises -->
+            <section>
+                <section data-markdown>
+                    <textarea data-template>
+                    ## Exercise 1: Simple 2D Example
+                    
+                    Given 2D dataset:
+                    ```
+                    X = [[2, 3], [3, 4], [4, 5], [5, 6]]
+                    ```
+                    
+                    **Tasks:**
+                    1. <!-- .element: class="fragment" --> Center the data
+                    2. <!-- .element: class="fragment" --> Compute covariance matrix  
+                    3. <!-- .element: class="fragment" --> Find eigenvalues and eigenvectors
+                    4. <!-- .element: class="fragment" --> Calculate explained variance ratios
+                    
+                    **Solution on next slide...**
+                    </textarea>
+                </section>
+
+                <section data-markdown>
+                    <textarea data-template>
+                    ## Exercise 1: Solution
+                    
+                    **Centered Data:**
+                    ```
+                    X_centered = [[-1.5, -1.5], [-0.5, -0.5], 
+                                  [0.5, 0.5], [1.5, 1.5]]
+                    ```
+                    
+                    **Covariance Matrix:**
+                    ```
+                    C = [[0.825, 0.518], [0.518, 0.549]]
+                    ```
+                    
+                    **Eigenvalues:** [1.223, 0.150]  
+                    **Explained Variance:** [89.05%, 10.95%]
+                    
+                    **Eigenvectors:** First PC captures the main diagonal direction
+                    </textarea>
+                </section>
+
+                <section data-markdown>
+                    <textarea data-template>
+                    ## Exercise 2: Hands-on Problems
+                    
+                    **Problem 1:** What happens to PCA if we don't standardize features with very different scales?
+                    
+                    **Problem 2:** How would you determine the optimal number of components for a given dataset?
+                    
+                    **Problem 3:** Can PCA be used for data compression? Calculate the compression ratio for Iris dataset using 2 components.
+                    
+                    **Problem 4:** What is the relationship between PCA and SVD (Singular Value Decomposition)?
+                    
+                    **Discuss in groups and prepare answers!**
+                    </textarea>
+                </section>
+            </section>
+
+            <!-- Homework Assignment -->
+            <section>
+                <section data-markdown>
+                    <textarea data-template>
+                    ## Homework Assignment
+                    ### PCA Analysis of Iris Dataset
+                    
+                    **Deliverables:** Jupyter notebook with code, analysis, and visualizations
+                    
+                    **Due date:** Next week
+                    
+                    **Dataset:** Use scikit-learn's iris dataset
+                    
+                    **Tools:** Python, NumPy, scikit-learn, matplotlib
+                    </textarea>
+                </section>
+
+                <section data-markdown>
+                    <textarea data-template>
+                    ## Homework Questions
+                    
+                    1. **Calculate the covariance matrix** of the Iris dataset (after standardization)
+                    
+                    2. **Find the eigenvalues and eigenvectors** of the covariance matrix manually (using NumPy)
+                    
+                    3. **Determine how many components** are needed to explain 99% of the variance
+                    
+                    4. **Apply PCA with 2 components** and create visualization comparing original vs. transformed data
+                    
+                    5. **Calculate reconstruction error** when using only 2 components
+                    
+                    6. **Interpret the loadings** of the first two principal components - what do they represent biologically?
+                    
+                    **Bonus:** Compare manual implementation with scikit-learn PCA results
+                    </textarea>
+                </section>
+            </section>
+
+            <!-- Final Slide -->
+            <section data-markdown>
+                <textarea data-template>
+                ## Summary
+                
+                **Key Takeaways:**
+                - <!-- .element: class="fragment" --> PCA finds directions of maximum variance
+                - <!-- .element: class="fragment" --> Based on eigendecomposition of covariance matrix
+                - <!-- .element: class="fragment" --> Useful for dimensionality reduction and visualization
+                - <!-- .element: class="fragment" --> scikit-learn provides easy implementation
+                - <!-- .element: class="fragment" --> Iris dataset: 2 components capture 95.81% of variance
+                
+                <!-- .element: class="fragment" --> **Next lecture:** Other dimensionality reduction techniques (t-SNE, LDA)
+                
+                ---
+                
+                **Questions?**
+                </textarea>
+            </section>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/reveal.js@4.3.1/dist/reveal.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/reveal.js@4.3.1/plugin/markdown/markdown.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/reveal.js@4.3.1/plugin/highlight/highlight.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/reveal.js@4.3.1/plugin/math/math.js"></script>
+    <script src="app.js"></script>
+</body>
+</html>

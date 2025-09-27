@@ -1,0 +1,698 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stochastic Gradient Descent - Lecture</title>
+    
+    <!-- Reveal.js CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@4.3.1/dist/reveal.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@4.3.1/dist/theme/black.css" id="theme">
+    
+    <!-- Code highlighting -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@4.3.1/plugin/highlight/monokai.css">
+    
+    <!-- MathJax -->
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="reveal">
+        <div class="slides">
+            
+            <!-- Slide 1: Title -->
+            <section data-markdown>
+                <textarea data-template>
+                    # Stochastic Gradient Descent
+                    ## For Classification and Regression
+                    
+                    **Universidad El Bosque**
+                    
+                    Math Department  
+                    Duration: 2 hours 
+                    
+                    *Methods for Machine Learning 2*
+
+                </textarea>
+            </section>
+
+            <!-- Slide 2: Learning Objectives -->
+            <section data-markdown>
+                <textarea data-template>
+                    ## Learning Objectives
+                    
+                    By the end of this lecture, you will:
+                    
+                    - 🎯 **Understand** the mathematical foundations of gradient descent
+                    - 📐 **Derive** SGD algorithms for regression and classification
+                    - 💻 **Implement** SGD from scratch for linear and logistic regression
+                    - 📈 **Analyze** convergence properties and learning rate effects
+                    - 🚀 **Apply** SGD to real-world problems with confidence
+
+                    Note: These objectives build upon prerequisite knowledge of calculus, linear algebra, and basic probability theory. Ensure students are comfortable with partial derivatives and vector operations.
+                </textarea>
+            </section>
+
+            <!-- Slide 3: Agenda -->
+            <section data-markdown class="small-text">
+                <textarea data-template>
+                    ## Lecture Agenda
+                    
+                    **Part 1: Foundations (30 min)**
+                    - Optimization problems & gradient descent basics
+                    - Mathematical foundations
+                    
+                    **Part 2: SGD Theory (40 min)**
+                    - Stochastic vs batch gradient descent
+                    - Linear & logistic regression derivations
+                    
+                    **Part 3: Practice (30 min)**
+                    - Implementation examples
+                    - Convergence analysis
+                    
+                    **Part 4: Applications (20 min)**
+                    - Exercises and homework assignment
+
+                    Note: This timing allows for questions and interactive discussion. Adjust pace based on student understanding, particularly during mathematical derivations.
+                </textarea>
+            </section>
+
+            <!-- Slide 4: Introduction to Optimization -->
+            <section data-markdown>
+                <textarea data-template>
+                    ## Optimization Problems
+                    
+                    **Goal**: Find parameters $\theta$ that minimize a loss function $J(\theta)$
+                    
+                    $$\theta^* = \arg\min_{\theta} J(\theta)$$
+                    
+                    **Examples:**
+                    - 📊 **Regression**: Minimize squared error
+                    - 🎯 **Classification**: Minimize cross-entropy
+                    - 🧠 **Deep Learning**: Minimize complex non-convex functions
+                    
+                    **Challenge**: How do we find $\theta^*$ efficiently?
+
+                    Note: Connect this to students' prior knowledge of finding minima in single-variable calculus. Emphasize that we're now dealing with multidimensional optimization problems.
+                </textarea>
+            </section>
+
+            <!-- Slide 5: What is Gradient Descent? -->
+            <section data-markdown>
+                <textarea data-template>
+                    ## What is Gradient Descent?
+                    
+                    **Key Insight**: Move in the direction opposite to the gradient
+                    
+                    $$\theta_{t+1} = \theta_t - \eta \nabla J(\theta_t)$$
+                    
+                    Where:
+                    - $\theta_t$: parameters at step $t$
+                    - $\eta$: learning rate (step size)
+                    - $\nabla J(\theta_t)$: gradient of loss function
+                    
+                    💡 **Intuition**: Roll a ball down the hill to find the valley bottom
+
+                    Note: Use the ball-rolling analogy extensively. Ask students to visualize this process and relate it to their physical intuition about gravity and motion.
+                </textarea>
+            </section>
+
+            <!-- Slide 6: Mathematical Foundations -->
+            <section data-markdown>
+                <textarea data-template>
+                    ## Mathematical Foundations
+                    
+                    **Gradient**: Vector of partial derivatives
+                    
+                    For $J(\theta_1, \theta_2, \ldots, \theta_n)$:
+                    
+                    $$\nabla J = \begin{bmatrix}
+                    \frac{\partial J}{\partial \theta_1} \\
+                    \frac{\partial J}{\partial \theta_2} \\
+                    \vdots \\
+                    \frac{\partial J}{\partial \theta_n}
+                    \end{bmatrix}$$
+                    
+                    **Properties:**
+                    - Points in direction of steepest **ascent**
+                    - We move **opposite** to gradient (steepest descent)
+
+                    Note: Review partial derivatives if needed. Emphasize that the gradient is a vector field - it gives a direction at every point in the parameter space.
+                </textarea>
+            </section>
+
+            <!-- Slide 7: Gradient Descent Algorithm -->
+            <section data-markdown>
+                <textarea data-template>
+                    ## Gradient Descent Algorithm
+                    
+                    ```python
+                    def gradient_descent(X, y, theta_init, learning_rate, max_epochs):
+                        theta = theta_init
+                        for epoch in range(max_epochs):
+                            # Compute gradient using ALL training data
+                            gradient = compute_gradient(X, y, theta)
+                            # Update parameters
+                            theta = theta - learning_rate * gradient
+                            # Check convergence
+                            if converged(theta):
+                                break
+                        return theta
+                    ```
+                    
+                    🔄 **Uses entire dataset** for each gradient computation
+
+                    Note: Walk through this pseudocode step by step. Emphasize that "compute_gradient" requires processing the entire dataset, which can be computationally expensive.
+                </textarea>
+            </section>
+
+            <!-- Slide 8: Gradient Descent Visualization -->
+            <section>
+                <h2>Gradient Descent Visualization</h2>
+                
+				<div style="text-align: center; margin: 20px 0;">
+					<img src="https://ppl-ai-code-interpreter-files.s3.amazonaws.com/web/direct-files/99ddd4e44134701ff9b76f9f476c2714/206084cf-5252-4215-be31-14b160c3b367/4bd0a41d.png" 
+						 alt="Gradient Descent Convergence on Quadratic Function" 
+						 style="width: 800px; height: auto; border-radius: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.3);">
+				</div>
+                
+                <p><strong>Key Observations:</strong></p>
+                <ul>
+                    <li>Starts far from minimum at x = -4</li>
+                    <li>Takes progressively smaller steps</li>
+                    <li>Converges to global minimum at x = -1</li>
+                    <li>Step size decreases as gradient approaches zero</li>
+                </ul>
+
+                <aside class="notes">
+                    Point out how the algorithm takes large steps initially when far from the minimum, then smaller steps as it approaches the optimum. This is because the gradient magnitude decreases near the minimum.
+                </aside>
+            </section>
+
+            <!-- Slide 9: Limitations of Batch Gradient Descent -->
+            <section data-markdown>
+                <textarea data-template>
+                    ## Limitations of Batch Gradient Descent
+                    
+                    **Problems with large datasets:**
+                    
+                    ⚠️ **Computational Cost**: $O(n)$ per iteration for $n$ samples
+                    
+                    ⚠️ **Memory Requirements**: Need entire dataset in memory
+                    
+                    ⚠️ **Slow Updates**: One update per complete dataset pass
+                    
+                    ⚠️ **Local Optima**: Can get stuck in shallow minima
+                    
+                    **Solution**: Stochastic Gradient Descent! 🎯
+
+                    Note: Give concrete examples: processing 1 million samples means computing 1 million gradients before making a single parameter update. This is inefficient and slow.
+                </textarea>
+            </section>
+
+            <!-- Slide 10: Introduction to SGD -->
+            <section data-markdown class="small-text">
+                <textarea data-template>
+                    ## Stochastic Gradient Descent (SGD)
+                    
+                    **Key Idea**: Use **one random sample** per update
+                    
+                    Instead of: $\nabla J(\theta) = \frac{1}{n}\sum_{i=1}^n \nabla J_i(\theta)$
+                    
+                    Use: $\nabla J_i(\theta)$ for randomly selected sample $i$
+                    
+                    **Advantages:**
+                    - ⚡ Much faster per iteration
+                    - 💾 Lower memory requirements  
+                    - 🎲 Noise helps escape local minima
+                    - 📈 Can start learning immediately
+
+                    Note: Emphasize the trade-off: we get faster updates but noisier gradient estimates. The randomness is actually beneficial for avoiding local optima in non-convex functions.
+                </textarea>
+            </section>
+
+            <!-- Slide 11: SGD Algorithm -->
+            <section data-markdown>
+                <textarea data-template>
+                    ## SGD Algorithm
+                    
+                    ```python
+                    def sgd(X, y, theta_init, learning_rate, max_epochs):
+                        theta = theta_init
+                        n = len(X)
+                        
+                        for epoch in range(max_epochs):
+                            # Shuffle training data
+                            indices = shuffle(range(n))
+                            
+                            for i in indices:
+                                # Compute gradient for single sample
+                                gradient = compute_gradient(X[i], y[i], theta)
+                                # Update parameters
+                                theta = theta - learning_rate * gradient
+                        
+                        return theta
+                    ```
+
+                    Note: Highlight the key differences from batch GD: we shuffle data each epoch and update parameters after each sample rather than after processing all samples.
+                </textarea>
+            </section>
+
+            <!-- Slide 12: SGD vs Batch GD Comparison -->
+            <section>
+                <h2>SGD vs Batch GD Comparison</h2>
+                
+                <div style="text-align: center; margin: 20px 0;">
+                    <img src="https://ppl-ai-code-interpreter-files.s3.amazonaws.com/web/direct-files/99ddd4e44134701ff9b76f9f476c2714/99b3bf58-6820-427e-87cd-25fb973e34e6/8268b006.png" 
+                         alt="Comparison of Gradient Descent Variants" 
+                         style="max-width: 75%; height: auto; border-radius: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.3);">
+                </div>
+                
+                <p><strong>Observations:</strong></p>
+                <ul>
+                    <li><strong>Batch GD</strong>: Smooth, direct path to minimum</li>
+                    <li><strong>SGD</strong>: Noisy but often faster convergence</li>
+                    <li><strong>Mini-batch</strong>: Balance between stability and speed</li>
+                </ul>
+
+                <aside class="notes">
+                    Point out how SGD's path is more erratic but can actually reach the vicinity of the minimum faster. The noise helps it explore the parameter space more effectively.
+                </aside>
+            </section>
+
+            <!-- Slide 13: Learning Rate Effects -->
+            <section>
+                <h2>Learning Rate Effects</h2>
+                
+                <div style="text-align: center; margin: 20px 0;">
+                    <img src="https://ppl-ai-code-interpreter-files.s3.amazonaws.com/web/direct-files/99ddd4e44134701ff9b76f9f476c2714/cd2e675a-f123-4dae-bee4-269419598144/2415ce0d.png" 
+                         alt="Effect of Learning Rate on Gradient Descent" 
+                         style="max-width: 70%; height: auto; border-radius: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.3);">
+                </div>
+                
+                <p><strong>Critical Considerations:</strong></p>
+                <ul>
+                    <li><strong>η = 0.001</strong>: Too small → very slow convergence</li>
+                    <li><strong>η = 0.1</strong>: Just right → stable, efficient convergence</li>
+                    <li><strong>η = 1.5</strong>: Too large → oscillation and divergence</li>
+                </ul>
+
+                <aside class="notes">
+                    This is one of the most important hyperparameters to tune. Show how learning rate selection affects both convergence speed and stability. Too large causes overshooting, too small wastes computational time.
+                </aside>
+            </section>
+
+            <!-- Slide 14: Linear Regression with SGD - Theory -->
+            <section data-markdown class="small-text">
+                <textarea data-template>
+                    ## Linear Regression with SGD
+                    
+                    **Model**: $\hat{y} = wx + b$
+                    
+                    **Loss Function** (Mean Squared Error):
+                    $$J(w,b) = \frac{1}{2}(\hat{y} - y)^2 = \frac{1}{2}(wx + b - y)^2$$
+                    
+                    **Goal**: Find optimal weights $w^*$ and bias $b^*$
+                    
+                    **Approach**: 
+                    1. Compute gradients
+                    2. Update parameters using SGD
+                    3. Repeat until convergence
+
+                    Note: Start with the simplest case - single feature linear regression. The extension to multiple features is straightforward using vector notation.
+                </textarea>
+            </section>
+
+            <!-- Slide 15: Linear Regression - Mathematical Derivation -->
+            <section data-markdown class="small-text">
+                <textarea data-template>
+                    ## Linear Regression - Gradient Derivation
+                    
+                    **Loss for single sample**: $J_i(w,b) = \frac{1}{2}(\hat{y}_i - y_i)^2$
+                    
+                    **Gradients:**
+                    
+                    $$\frac{\partial J_i}{\partial w} = \frac{\partial}{\partial w}\left[\frac{1}{2}(wx_i + b - y_i)^2\right]$$
+                    $$= (wx_i + b - y_i) \cdot x_i = (\hat{y}_i - y_i) \cdot x_i$$
+                    
+                    $$\frac{\partial J_i}{\partial b} = \frac{\partial}{\partial b}\left[\frac{1}{2}(wx_i + b - y_i)^2\right]$$
+                    $$= (wx_i + b - y_i) = \hat{y}_i - y_i$$
+
+                    Note: Work through the chain rule step by step. The key insight is that the gradient depends on the prediction error multiplied by the input (for weight) or just the error (for bias).
+                </textarea>
+            </section>
+
+            <!-- Slide 16: Linear Regression - Update Rules -->
+            <section data-markdown class="small-text">
+                <textarea data-template>
+                    ## Linear Regression - SGD Update Rules
+                    
+                    **For each training sample** $(x_i, y_i)$:
+                    
+                    1. **Forward pass**: $\hat{y}_i = wx_i + b$
+                    
+                    2. **Compute error**: $e_i = \hat{y}_i - y_i$
+                    
+                    3. **Update parameters**:
+                       - $w := w - \eta \cdot e_i \cdot x_i$
+                       - $b := b - \eta \cdot e_i$
+                    
+                    Where $\eta$ is the learning rate
+                    
+                    🔄 **Repeat** for all samples in randomized order
+
+                    Note: These update rules are intuitive: if we overpredict (e > 0), we decrease the weight. The magnitude of adjustment depends on the input value and learning rate.
+                </textarea>
+            </section>
+
+            <!-- Slide 17: Linear Regression Example -->
+            <section>
+                <h4>Linear Regression - SGD in Action</h4>
+                
+                <div style="text-align: center; margin: 20px 0;">
+                    <img src="https://ppl-ai-code-interpreter-files.s3.amazonaws.com/web/direct-files/99ddd4e44134701ff9b76f9f476c2714/74a639d0-535a-44ef-aeec-15dba565131f/b30b6cc3.png" 
+                         alt="Linear Regression with Stochastic Gradient Descent" 
+                         style="max-width: 70%; height: auto; border-radius: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.3);">
+                </div>
+                
+                <p><strong>Progress Tracking:</strong></p>
+                <ul>
+                    <li>MSE decreases from 2.47 → 0.12 over iterations</li>
+                    <li>Line progressively fits data better</li>
+                    <li>Convergence demonstrates SGD effectiveness</li>
+                </ul>
+
+                <aside class="notes">
+                    Show how the fitted line evolves from a poor initial guess to closely matching the underlying data pattern. The decreasing MSE values quantify the improvement in fit quality.
+                </aside>
+            </section>
+
+            <!-- Slide 18: Logistic Regression with SGD - Theory -->
+            <section data-markdown>
+                <textarea data-template>
+                    ## Logistic Regression with SGD
+                    
+                    **Model**: $p = \sigma(wx + b) = \frac{1}{1 + e^{-(wx+b)}}$
+                    
+                    **Loss Function** (Binary Cross-Entropy):
+                    $$J(w,b) = -y\log(p) - (1-y)\log(1-p)$$
+                    
+                    **Why this loss?**
+                    - Penalizes confident wrong predictions heavily
+                    - Rewards confident correct predictions
+                    - Differentiable everywhere
+
+                    Note: Explain the sigmoid function's role in mapping real numbers to probabilities. The cross-entropy loss ensures proper probabilistic interpretation and smooth optimization.
+                </textarea>
+            </section>
+
+            <!-- Slide 19: Logistic Regression - Mathematical Derivation -->
+            <section data-markdown class="small-text">
+                <textarea data-template>
+                    ## Logistic Regression - Gradient Derivation
+                    
+                    **Key insight**: $\sigma'(z) = \sigma(z)(1-\sigma(z))$
+                    
+                    **For single sample**:
+                    $$\frac{\partial J_i}{\partial w} = \frac{\partial J_i}{\partial p} \cdot \frac{\partial p}{\partial z} \cdot \frac{\partial z}{\partial w}$$
+                    
+                    After applying chain rule:
+                    
+                    $$\frac{\partial J_i}{\partial w} = (p_i - y_i) \cdot x_i$$
+                    
+                    $$\frac{\partial J_i}{\partial b} = p_i - y_i$$
+                    
+                    **Remarkably similar** to linear regression! 🤔
+
+                    Note: The mathematical elegance here is striking - the gradient has the same form as linear regression, just with probability replacing the direct prediction. Work through the chain rule derivation carefully.
+                </textarea>
+            </section>
+
+            <!-- Slide 20: Logistic Regression - Update Rules -->
+            <section data-markdown class="small-text">
+                <textarea data-template>
+                    ## Logistic Regression - SGD Update Rules
+                    
+                    **For each training sample** $(x_i, y_i)$:
+                    
+                    1. **Forward pass**: 
+                       - $z_i = wx_i + b$
+                       - $p_i = \frac{1}{1 + e^{-z_i}}$
+                    
+                    2. **Compute error**: $e_i = p_i - y_i$
+                    
+                    3. **Update parameters**:
+                       - $w := w - \eta \cdot e_i \cdot x_i$
+                       - $b := b - \eta \cdot e_i$
+                    
+                    **Same form as linear regression!** Only the prediction function differs.
+
+                    Note: Emphasize this beautiful symmetry - the update rules are identical, but we're now updating based on probability errors rather than direct prediction errors.
+                </textarea>
+            </section>
+
+            <!-- Slide 21: Logistic Regression Example -->
+            <section>
+                <h4>Logistic Regression - Classification Example</h4>
+                
+                <div style="text-align: center; margin: 20px 0;">
+                    <img src="https://ppl-ai-code-interpreter-files.s3.amazonaws.com/web/direct-files/99ddd4e44134701ff9b76f9f476c2714/462e5cf5-f201-4445-9d69-9e359e4c010e/1ba4c0fc.png" 
+                         alt="Logistic Regression Classification with SGD" 
+                         style="max-width: 75%; height: auto; border-radius: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.3);">
+                </div>
+                
+                <p><strong>Classification Progress:</strong></p>
+                <ul>
+                    <li>Accuracy improves from 55% → 95% over iterations</li>
+                    <li>Decision boundary becomes more effective</li>
+                    <li>Clear separation between classes emerges</li>
+                </ul>
+
+                <aside class="notes">
+                    Show how the decision boundary evolves from a poor initial guess to effectively separating the two classes. The accuracy improvement demonstrates successful learning.
+                </aside>
+            </section>
+
+            <!-- Slide 22: Mini-batch Gradient Descent -->
+            <section data-markdown class="small-text">
+                <textarea data-template>
+                    ## Mini-batch Gradient Descent
+                    
+                    **Compromise**: Use small batches instead of single samples
+                    
+                    $$\nabla J(\theta) = \frac{1}{|B|}\sum_{i \in B} \nabla J_i(\theta)$$
+                    
+                    where $B$ is a mini-batch (e.g., 32, 64, 128 samples)
+                    
+                    **Advantages:**
+                    - ✅ More stable than SGD
+                    - ✅ More efficient than batch GD  
+                    - ✅ Better gradient estimation
+                    - ✅ Vectorized computation friendly
+
+                    Note: Mini-batch is the standard in practice. Explain how batch sizes are typically powers of 2 for computational efficiency, and how this balances the trade-offs of both extremes.
+                </textarea>
+            </section>
+
+            <!-- Slide 23: Convergence Analysis -->
+            <section data-markdown>
+                <textarea data-template>
+                    ## Convergence Analysis
+                    
+                    **SGD Convergence Conditions:**
+                    
+                    1. **Learning rate schedule**: $\sum_{t=1}^{\infty} \eta_t = \infty$ and $\sum_{t=1}^{\infty} \eta_t^2 < \infty$
+                    
+                    2. **Example**: $\eta_t = \frac{1}{\sqrt{t}}$ or $\eta_t = \frac{1}{t}$
+                    
+                    **Key Insights:**
+                    - 🎯 SGD converges to neighborhood of optimum
+                    - 📉 Decreasing learning rate ensures convergence
+                    - 🎲 Noise initially helps, later hurts precision
+                    - ⚖️ Trade-off between speed and accuracy
+
+                    Note: These theoretical conditions ensure convergence but may be too conservative in practice. Explain the Robbins-Monro conditions and why learning rate scheduling matters.
+                </textarea>
+            </section>
+
+            <!-- Slide 24: Practical Considerations -->
+            <section data-markdown class="small-text">
+                <textarea data-template>
+                    ## Practical Considerations
+                    
+                    **Data Preprocessing:**
+                    - 📊 **Normalize features**: Zero mean, unit variance
+                    - 🔄 **Shuffle data**: Prevent ordering bias
+                    
+                    **Hyperparameters:**
+                    - 📈 **Learning rate**: Start with 0.01, tune as needed
+                    - 🔢 **Batch size**: 32-256 for most problems
+                    - 🔄 **Epochs**: Monitor validation loss
+                    
+                    **Monitoring:**
+                    - 📉 Plot loss curves
+                    - 🎯 Track validation metrics
+                    - ⏹️ Early stopping if overfitting
+
+                    Note: These practical tips are learned from experience. Emphasize the importance of proper data preprocessing and hyperparameter tuning for successful SGD implementation.
+                </textarea>
+            </section>
+
+            <!-- Slide 25: Common Pitfalls and Debugging -->
+            <section data-markdown>
+                <textarea data-template>
+                    ## Common Pitfalls & Debugging
+                    
+                    **Problem**: Loss not decreasing
+                    **Solution**: ✅ Check learning rate, gradients, data preprocessing
+                    
+                    **Problem**: Loss exploding  
+                    **Solution**: ✅ Reduce learning rate, check for numerical instability
+                    
+                    **Problem**: Slow convergence
+                    **Solution**: ✅ Increase learning rate, improve initialization
+                    
+                    **Problem**: Poor generalization
+                    **Solution**: ✅ Add regularization, reduce model complexity
+                    
+                    💡 **Pro tip**: Always visualize your loss curves!
+
+                    Note: Share real debugging experiences. Loss curves are the most important diagnostic tool - they reveal whether the algorithm is learning, overfitting, or having convergence issues.
+                </textarea>
+            </section>
+
+            <!-- Slide 26: Practice Exercises -->
+            <section data-markdown>
+                <textarea data-template>
+                    ## Practice Exercises
+                    
+                    **Exercise 1: Compute Gradients**
+                    For $f(x) = 3x^2 - 4x + 2$, find $\nabla f$ at $x = 1$ and $x = 2$
+                    
+                    **Exercise 2: SGD Step**
+                    One SGD step for $f(x) = x^2 - 2x + 5$, $x_0 = 3$, $\eta = 0.1$
+                    
+                    **Exercise 3: Learning Rate Analysis**
+                    What happens with $\eta = 0.001$, $\eta = 0.1$, $\eta = 1.5$?
+                    
+                    *Try these now! Solutions on next slide.*
+
+                    Note: Give students 5-10 minutes to work through these exercises. Walk around and help individuals. These reinforce the mathematical concepts before showing solutions.
+                </textarea>
+            </section>
+
+            <!-- Slide 27: Exercise Solutions -->
+            <section data-markdown>
+                <textarea data-template>
+                    ## Exercise Solutions
+                    
+                    **Exercise 1:**
+                    $f'(x) = 6x - 4$
+                    - At $x = 1$: $f'(1) = 2$
+                    - At $x = 2$: $f'(2) = 8$
+                    
+                    **Exercise 2:**
+                    $\nabla f = 2x - 2$; $\nabla f(3) = 4$
+                    $x_1 = 3 - 0.1 \times 4 = 2.6$
+                    
+                    **Exercise 3:**
+                    - $\eta = 0.001$: Too small → slow convergence
+                    - $\eta = 0.1$: Good → stable convergence  
+                    - $\eta = 1.5$: Too large → divergence/oscillation
+
+                    Note: Review each solution step by step. For Exercise 3, you could even demonstrate the different behaviors with a simple simulation if time permits.
+                </textarea>
+            </section>
+
+            <!-- Slide 28: Homework Assignment -->
+            <section data-markdown class="small-text">
+                <textarea data-template>
+                    ## Homework Assignment
+                    
+                    **Problem 1: Implement SGD for Linear Regression**
+                    - Derive gradients, code algorithm, test on data, plot convergence
+                    
+                    **Problem 2: Compare SGD vs Batch GD**
+                    - Generate data, implement both, compare speed and learning rates
+                    
+                    **Problem 3: Logistic Regression with SGD**
+                    - Derive gradients, implement classifier, test on Iris dataset
+                    
+                    **Problem 4: Learning Rate Scheduling**
+                    - Try constant, linear decay, $1/\sqrt{t}$ decay schedules
+                    
+                    **Due**: Next week. Submit code + written report.
+
+                    Note: Provide starter code or detailed specifications for each problem. Emphasize that they should implement SGD from scratch, not use library functions, to truly understand the algorithm.
+                </textarea>
+            </section>
+
+            <!-- Slide 29: Advanced Topics Preview -->
+            <section data-markdown class="small-text">
+                <textarea data-template>
+                    ## Advanced Topics Preview
+                    
+                    **Next lectures will cover:**
+                    
+                    🚀 **Momentum & Adaptive Methods**
+                    - SGD with momentum, Adam, RMSprop
+                    
+                    🧠 **Neural Networks**
+                    - Backpropagation, deep learning
+                    
+                    🎯 **Regularization**
+                    - L1/L2 regularization, dropout
+                    
+                    📊 **Advanced Optimization**
+                    - Second-order methods, natural gradients
+                    
+                    Stay tuned for more exciting content! 🎉
+
+                    Note: Build excitement for future topics. Mention how SGD is the foundation for understanding modern deep learning optimization methods.
+                </textarea>
+            </section>
+
+            <!-- Slide 30: Summary and Q&A -->
+            <section data-markdown>
+                <textarea data-template>
+                    ## Summary
+                    
+                    **Key Takeaways:**
+                    
+                    ✅ **SGD** trades noise for speed and efficiency
+                    
+                    ✅ **Same gradient principles** apply to regression and classification
+                    
+                    ✅ **Learning rate** is the most critical hyperparameter
+                    
+                    ✅ **Mini-batches** provide good balance
+                    
+                    ✅ **Practice and visualization** are essential for understanding
+                    
+                    ---
+                    
+                    ## Questions & Discussion
+                    
+                    *What would you like to explore further?*
+
+                    Note: Reserve 10-15 minutes for questions. Common questions include: How to choose learning rates? When to use SGD vs other optimizers? How SGD relates to neural networks?
+                </textarea>
+            </section>
+
+        </div>
+    </div>
+
+    <!-- Reveal.js JavaScript -->
+    <script src="https://cdn.jsdelivr.net/npm/reveal.js@4.3.1/dist/reveal.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/reveal.js@4.3.1/plugin/notes/notes.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/reveal.js@4.3.1/plugin/markdown/markdown.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/reveal.js@4.3.1/plugin/highlight/highlight.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/reveal.js@4.3.1/plugin/math/math.js"></script>
+
+    <!-- Custom JavaScript -->
+    <script src="app.js"></script>
+</body>
+</html>

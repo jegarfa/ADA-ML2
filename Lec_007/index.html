@@ -1,0 +1,1224 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>K-means Clustering - Undergraduate Mathematics</title>
+    
+    <!-- Reveal.js CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.1/reveal.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.1/theme/white.min.css" id="theme">
+    
+    <!-- Highlight.js for code syntax -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github.min.css">
+    
+    <!-- MathJax for mathematical equations -->
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    
+    <style>
+        /* Custom styling for academic presentation with 16:9 format */
+        .reveal {
+            font-size: 28px;
+            font-family: 'Arial', sans-serif;
+            background: #ffffff;
+        }
+        
+        .reveal h1 { 
+            font-size: 1.8em; 
+            margin-bottom: 0.5em;
+            color: #2c3e50;
+            font-weight: 600;
+            text-align: center;
+        }
+        
+        .reveal h2 { 
+            font-size: 1.4em; 
+            margin-bottom: 0.4em;
+            color: #2c3e50;
+            font-weight: 600;
+            border-bottom: 2px solid #3498db;
+            padding-bottom: 0.2em;
+        }
+        
+        .reveal h3 { 
+            font-size: 1.2em; 
+            margin-bottom: 0.3em;
+            color: #34495e;
+            font-weight: 600;
+        }
+        
+        .reveal ul, .reveal ol { 
+            font-size: 0.9em; 
+            line-height: 1.4; 
+            margin: 0.5em 0;
+        }
+        
+        .reveal .slides section {
+            text-align: left;
+            padding: 0.5em;
+        }
+        
+        .reveal .math {
+            font-size: 0.8em;
+        }
+        
+        .reveal table {
+            font-size: 0.8em;
+            margin: 0.5em auto;
+        }
+        
+        .reveal .title-slide {
+            text-align: center;
+        }
+        
+        .reveal .algorithm-box {
+            background: #f8f9fa;
+            border: 2px solid #e9ecef;
+            border-radius: 8px;
+            padding: 12px;
+            margin: 10px 0;
+            font-size: 0.9em;
+        }
+        
+        .reveal .definition-box {
+            background: #e8f4f8;
+            border-left: 4px solid #3498db;
+            padding: 10px;
+            margin: 10px 0;
+            font-size: 0.9em;
+        }
+        
+        .reveal .example-box {
+            background: #f0f8e8;
+            border-left: 4px solid #2ecc71;
+            padding: 10px;
+            margin: 10px 0;
+            font-size: 0.9em;
+        }
+        
+        .reveal .exercise-box {
+            background: #fff3e0;
+            border-left: 4px solid #f39c12;
+            padding: 10px;
+            margin: 10px 0;
+            font-size: 0.9em;
+        }
+        
+        .reveal table {
+            font-size: 0.8em;
+        }
+        
+        .reveal .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.8em;
+        }
+        
+        .reveal .comparison-table th {
+            background-color: #3498db;
+            color: white;
+            padding: 8px;
+            text-align: center;
+            font-size: 0.9em;
+        }
+        
+        .reveal .comparison-table td {
+            padding: 6px;
+            border: 1px solid #ddd;
+            font-size: 0.85em;
+        }
+        
+        .reveal .comparison-table tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+        
+        .reveal .math-formula {
+            font-size: 1.0em;
+            text-align: center;
+            margin: 15px 0;
+        }
+        
+        .reveal .step-number {
+            background: #3498db;
+            color: white;
+            border-radius: 50%;
+            width: 24px;
+            height: 24px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            margin-right: 8px;
+            font-size: 0.8em;
+        }
+        
+        .reveal .chart-container {
+            text-align: center;
+            margin: 15px 0;
+        }
+        
+        .reveal .chart-container img {
+            max-width: 75%;
+            max-height: 400px;
+            width: auto;
+            height: auto;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        
+        .reveal .two-column {
+            display: flex;
+            justify-content: space-between;
+            gap: 20px;
+            font-size: 0.9em;
+        }
+        
+        .reveal .column {
+            flex: 1;
+        }
+        
+        .reveal .highlight {
+            background-color: #fff3cd;
+            padding: 5px;
+            border-radius: 4px;
+        }
+        
+        .reveal .progress {
+            color: #3498db;
+        }
+        
+        /* Speaker notes styling */
+        .speaker-notes {
+            font-size: 0.9em;
+            color: #666;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="reveal">
+        <div class="slides">
+            
+            <!-- Title Slide -->
+            <section data-markdown class="title-slide">
+                <textarea data-template>
+                    # K-means Clustering
+                    ## An Introduction to Unsupervised Learning
+                    
+                    ### Design and Analysis of Algorithms (ML2)- Undergraduate Mathematics Course
+                    **Lecturer:** Jorge E. García Farieta  
+                    **Date:** October 20, 2025  
+                    **Program:** Math degree
+                    
+                    ---
+                    
+                    *"The goal is to turn data into information, and information into insight."*  
+                    — Carly Fiorina
+                </textarea>
+                <aside class="notes">
+                    Welcome to today's lecture on K-means clustering. This is a 2-hour session covering unsupervised learning fundamentals and K-means algorithm. Encourage questions throughout.
+                </aside>
+            </section>
+
+            <!-- PART 1: Introduction to Unsupervised Learning -->
+            
+            <!-- Slide 2: What is Machine Learning? -->
+            <section data-markdown>
+                <textarea data-template>
+                    ## What is Machine Learning?
+                    
+                    <div class="definition-box">
+                    <strong>Machine Learning</strong> is a subset of artificial intelligence that enables computers to learn and make decisions from data without being explicitly programmed for every task.
+                    </div>
+                    
+                    ### Key Characteristics:
+                    - **Data-driven**: Learns patterns from data
+                    - **Adaptive**: Improves performance with more data
+                    - **Automated**: Makes predictions/decisions independently
+                    
+                    ### Three Main Types:
+                    1. **Supervised Learning** - Learning with labeled examples
+                    2. **Unsupervised Learning** - Finding patterns in unlabeled data
+                    3. **Reinforcement Learning** - Learning through trial and error
+                </textarea>
+                <aside class="notes">
+                    Start with broad context. Emphasize that ML is about pattern recognition. Today we focus on unsupervised learning. Ask students if they can think of examples.
+                </aside>
+            </section>
+
+            <!-- Slide 3: Supervised vs Unsupervised Learning -->
+            <section data-markdown>
+                <textarea data-template>
+                    ## Supervised vs Unsupervised Learning
+                    
+                    <div class="chart-container">
+                        <img src="https://ppl-ai-code-interpreter-files.s3.amazonaws.com/web/direct-files/10b929247a9aa60a459097d92ffc5aff/92f70fe3-9073-42fb-a0d3-3efe13d81c7e/edde8f78.png" alt="Supervised vs Unsupervised Learning Comparison">
+                    </div>
+                    
+                    ### Key Insight:
+                    **Unsupervised learning** is like being a detective - you have clues (data) but no solution manual. You must discover the hidden structure yourself!
+                </textarea>
+                <aside class="notes">
+                    Walk through each row of the comparison. Emphasize the detective analogy. Ask students which type they think is harder and why.
+                </aside>
+            </section>
+
+            <!-- Slide 4: Types of Unsupervised Learning -->
+            <section data-markdown>
+                <textarea data-template>
+                    ## Types of Unsupervised Learning
+                    
+                    ### 1. Clustering
+                    - **Goal**: Group similar data points together
+                    - **Examples**: Customer segmentation, gene analysis
+                    - **Algorithms**: K-means, Hierarchical, DBSCAN
+                    
+                    ### 2. Association Rules
+                    - **Goal**: Find relationships between variables
+                    - **Examples**: "People who buy X also buy Y"
+                    - **Algorithms**: Apriori, FP-Growth
+                    
+                    ### 3. Dimensionality Reduction
+                    - **Goal**: Reduce number of variables while preserving information
+                    - **Examples**: Data visualization, feature selection
+                    - **Algorithms**: PCA, t-SNE, UMAP
+                </textarea>
+                <aside class="notes">
+                    Focus on clustering since that's our main topic. Give concrete examples for each type. Mention that these often work together in real applications.
+                </aside>
+            </section>
+
+            <!-- Slide 5: Applications of Unsupervised Learning -->
+			<section>
+			  <h2>Applications of Unsupervised Learning</h2>
+			  <div class="two-column">
+				<div class="column">
+				  <h3>Business &amp; Marketing</h3>
+				  <ul>
+					<li>Customer segmentation</li>
+					<li>Market basket analysis</li>
+					<li>Recommendation systems</li>
+					<li>Fraud detection</li>
+				  </ul>
+				  <h3>Science &amp; Research</h3>
+				  <ul>
+					<li>Gene sequence analysis</li>
+					<li>Drug discovery</li>
+					<li>Climate pattern analysis</li>
+					<li>Astronomy data mining</li>
+				  </ul>
+				</div>
+				<div class="column">
+				  <h3>Technology</h3>
+				  <ul>
+					<li>Image segmentation</li>
+					<li>Document clustering</li>
+					<li>Network analysis</li>
+					<li>Anomaly detection</li>
+				  </ul>
+				  <h3>Social Sciences</h3>
+				  <ul>
+					<li>Social network analysis</li>
+					<li>Survey data analysis</li>
+					<li>Demographic studies</li>
+					<li>Behavioral pattern analysis</li>
+				  </ul>
+				</div>
+			  </div>
+			</section>
+
+            <!-- Slide 6: Why Study Clustering? -->
+            <section data-markdown>
+                <textarea data-template>
+                    ## Why Study Clustering?
+                    
+                    ### Mathematical Beauty
+                    - Optimization problems
+                    - Geometric interpretations
+                    - Convergence proofs
+                    
+                    ### Practical Importance
+                    - Foundation for many ML algorithms
+                    - Data exploration and understanding
+                    - Feature engineering
+                    
+                    ### Real-World Impact
+                    - Business decision making
+                    - Scientific discoveries
+                    - Social policy development
+                    
+                    <div class="highlight">
+                    <strong>Today's Focus</strong>: K-means clustering - the most widely used clustering algorithm
+                    </div>
+                </textarea>
+                <aside class="notes">
+                    Motivate why this matters for math students. Emphasize both theoretical beauty and practical applications. Transition to K-means specifically.
+                </aside>
+            </section>
+
+            <!-- Slide 7: What is Clustering? -->
+            <section data-markdown>
+                <textarea data-template>
+                    ## What is Clustering?
+                    
+                    <div class="definition-box">
+                    <strong>Clustering</strong> is the task of partitioning a dataset into groups (clusters) such that:<br>
+                    - Objects within the same cluster are <strong>similar</strong> to each other<br>
+                    - Objects in different clusters are <strong>dissimilar</strong> from each other
+                    </div>
+                    
+                    ### Mathematical Formulation
+                    Given a dataset $X = \{x_1, x_2, ..., x_n\}$ where $x_i \in \mathbb{R}^d$
+                    
+                    Find a partition $C = \{C_1, C_2, ..., C_k\}$ such that:
+                    - $C_i \cap C_j = \emptyset$ for $i \neq j$ (non-overlapping)
+                    - $\bigcup_{i=1}^{k} C_i = X$ (complete partition)
+                    - Minimize intra-cluster distance
+                    - Maximize inter-cluster distance
+                </textarea>
+                <aside class="notes">
+                    Introduce formal mathematical notation. Explain that similarity/dissimilarity needs to be quantified. This sets up the need for distance metrics.
+                </aside>
+            </section>
+
+            <!-- Slide 8: Distance and Similarity -->
+            <section data-markdown>
+                <textarea data-template>
+                    ## Distance and Similarity
+                    
+                    ### How do we measure "similarity"?
+                    
+                    **Most Common: Euclidean Distance**
+                    
+                    For points $x = (x_1, x_2, ..., x_d)$ and $y = (y_1, y_2, ..., y_d)$:
+                    
+                    <div class="math-formula">
+                    $$d(x,y) = \sqrt{\sum_{i=1}^{d} (x_i - y_i)^2}$$
+                    </div>
+                    
+                    ### Other Distance Metrics:
+                    - **Manhattan Distance**: $d(x,y) = \sum_{i=1}^{d} |x_i - y_i|$
+                    - **Minkowski Distance**: $d(x,y) = \left(\sum_{i=1}^{d} |x_i - y_i|^p\right)^{1/p}$
+                    - **Cosine Distance**: Based on angle between vectors
+                    
+                    <div class="example-box">
+                    <strong>Example</strong>: Distance between $(1,2)$ and $(4,6)$  
+                    $d = \sqrt{(4-1)^2 + (6-2)^2} = \sqrt{9 + 16} = 5$
+                    </div>
+                </textarea>
+                <aside class="notes">
+                    Work through the example calculation step by step. Ask students to calculate another example. Mention that choice of distance metric can affect results.
+                </aside>
+            </section>
+
+            <!-- Slide 9: Motivation for K-means -->
+            <section data-markdown>
+                <textarea data-template>
+                    ## Motivation for K-means
+                    
+                    ### The Challenge
+                    - How do we find "good" clusters automatically?
+                    - What makes one clustering better than another?
+                    - How do we choose the number of clusters?
+                    
+                    ### K-means Approach
+                    1. **Pre-specify** the number of clusters ($k$)
+                    2. **Minimize** the total within-cluster sum of squares (WCSS)
+                    3. **Iterate** between assigning points and updating centroids
+                    
+                    ### Why K-means?
+                    - ✅ Simple and intuitive
+                    - ✅ Computationally efficient
+                    - ✅ Works well for spherical clusters
+                    - ✅ Guaranteed to converge
+                    - ❌ Requires choosing $k$ in advance
+                    - ❌ Sensitive to initialization
+                </textarea>
+                <aside class="notes">
+                    Transition to K-means specifically. Emphasize the optimization perspective. The pros/cons help set expectations for what we'll learn.
+                </aside>
+            </section>
+
+            <!-- PART 2: K-means Algorithm -->
+            
+            <!-- Slide 10: What is K-means Clustering? -->
+            <section data-markdown>
+                <textarea data-template>
+                    # Part 2: K-means Algorithm
+                    
+                    ## What is K-means Clustering?
+                    
+                    <div class="definition-box">
+                    <strong>K-means</strong> is a clustering algorithm that partitions data into $k$ clusters by: <br>
+                    1. Finding $k$ <strong>centroids</strong> (cluster centers) <br>
+                    2. Assigning each point to the <strong>nearest centroid</strong> <br>
+                    3. <strong>Iteratively updating</strong> centroids and assignments <br>
+                    </div>
+                    
+                    ### Key Concepts:
+                    - **Centroid ($\mu_i$)**: The "center" of cluster $i$
+                    - **Assignment**: Each point belongs to exactly one cluster
+                    - **Objective**: Minimize within-cluster sum of squares (WCSS)
+                    
+                    <div class="math-formula">
+                    $$WCSS = \sum_{i=1}^{k} \sum_{x \in C_i} ||x - \mu_i||^2$$
+                    </div>
+                </textarea>
+                <aside class="notes">
+                    Start Part 2 with clear definition. Explain that centroid is like "average" point in cluster. The objective function is key - we'll see this throughout.
+                </aside>
+            </section>
+
+            <!-- Slide 11: Algorithm Overview -->
+            <section data-markdown>
+                <textarea data-template>
+                    ## K-means Algorithm Flowchart
+                    
+                    <div class="chart-container">
+                        <img src="https://ppl-ai-code-interpreter-files.s3.amazonaws.com/web/direct-files/10b929247a9aa60a459097d92ffc5aff/94012da7-d991-4d74-92e5-56a920d12569/1f72ef3f.png" alt="K-means Algorithm Flowchart">
+                    </div>
+                    
+                    ### The Two-Step Dance:
+                    1. **Assignment Step**: Assign each point to nearest centroid
+                    2. **Update Step**: Recalculate centroids as cluster means
+                    3. Repeat until convergence (centroids stop moving)
+                </textarea>
+                <aside class="notes">
+                    Walk through the flowchart step by step. Emphasize the iterative nature. The "two-step dance" is a memorable way to think about it.
+                </aside>
+            </section>
+
+            <!-- Slide 12: Step-by-Step Algorithm -->
+            <section data-markdown>
+                <textarea data-template>
+                    ## K-means Algorithm: Detailed Steps
+                    
+                    <div class="algorithm-box">
+                    
+                    **Input**: Dataset $X = \{x_1, ..., x_n\}$, number of clusters $k$
+                    
+                    <span class="step-number">1</span> **Initialize** $k$ centroids $\mu_1, ..., \mu_k$ randomly
+                    
+                    **Repeat until convergence**:
+                    
+                    <span class="step-number">2</span> **Assignment Step**: For each point $x_i$:
+                    $$c_i = \arg\min_{j} ||x_i - \mu_j||^2$$
+                    
+                    <span class="step-number">3</span> **Update Step**: For each cluster $j$:
+                    $$\mu_j = \frac{1}{|C_j|} \sum_{x_i \in C_j} x_i$$
+                    
+                    <span class="step-number">4</span> **Check Convergence**: If centroids don't change, stop
+                    
+                    **Output**: Cluster assignments and final centroids
+                    
+                    </div>
+                </textarea>
+                <aside class="notes">
+                    Go through each step carefully. Explain the argmin notation. The update step is just taking the average - this minimizes WCSS for that cluster.
+                </aside>
+            </section>
+
+            <!-- Slide 13: Numerical Example - Setup -->
+            <section data-markdown>
+                <textarea data-template>
+                    ## Numerical Example: Setup
+                    
+                    Let's trace through K-means with $k=2$ on a simple dataset:
+                    
+                    <div class="two-column">
+                        <div class="column">
+                            <strong>Dataset Points</strong>:<br>
+                            - A: (1, 1)<br>
+                            - B: (2, 2)<br>
+                            - C: (8, 8)<br>
+                            - D: (9, 9)<br>
+                            - E: (8, 9)<br>
+                            - F: (9, 8)<br><br>
+                        </div>
+                        <div class="column">
+                            <strong>Initial Centroids</strong>:<br>
+                            - C1: (2, 2)<br>
+                            - C2: (9, 9)
+                        </div>
+                    </div>
+                    
+                    ### Iteration 1: Assignment Step
+                    For each point, calculate distance to both centroids and assign to nearest:
+                    
+                    **Distance Formula**: $d = \sqrt{(x_1-x_2)^2 + (y_1-y_2)^2}$
+                </textarea>
+                <aside class="notes">
+                    Draw this on the board if possible. Have students calculate distances for one point before showing the table. This reinforces the distance calculation.
+                </aside>
+            </section>
+
+            <!-- Slide 14: Numerical Example - Iteration 1 -->
+            <section data-markdown>
+                <textarea data-template>
+                    ## Numerical Example: Iteration 1
+                    
+                    ### Distance Calculations &amp; Assignments:
+                    
+                    | Point | Distance to C1 (2,2) | Distance to C2 (9,9) | Assigned to |
+                    |-------|---------------------|---------------------|-------------|
+                    | A (1,1) | 1.41 | 11.31 | **C1** |
+                    | B (2,2) | 0.00 | 9.90 | **C1** |
+                    | C (8,8) | 8.49 | 1.41 | **C2** |
+                    | D (9,9) | 9.90 | 0.00 | **C2** |
+                    | E (8,9) | 9.22 | 1.00 | **C2** |
+                    | F (9,8) | 9.22 | 1.00 | **C2** |
+                    
+                    ### Clusters after Assignment:
+                    - **Cluster 1**: {A, B} = {(1,1), (2,2)}
+                    - **Cluster 2**: {C, D, E, F} = {(8,8), (9,9), (8,9), (9,8)}
+                </textarea>
+                <aside class="notes">
+                    Verify a few distance calculations with students. Note the clear separation - this is a "good" clustering problem where clusters are well-separated.
+                </aside>
+            </section>
+
+            <!-- Slide 15: Numerical Example - Update Step -->
+            <section data-markdown>
+                <textarea data-template>
+                    ## Numerical Example: Update Centroids
+                    
+                    ### Update Step: Calculate New Centroids
+                    
+                    **Cluster 1**: {(1,1), (2,2)}
+                    $$\mu_1 = \frac{(1,1) + (2,2)}{2} = \frac{(3,3)}{2} = (1.5, 1.5)$$
+                    
+                    **Cluster 2**: {(8,8), (9,9), (8,9), (9,8)}
+                    $$\mu_2 = \frac{(8,8) + (9,9) + (8,9) + (9,8)}{4} = \frac{(34,34)}{4} = (8.5, 8.5)$$
+                    
+                    ### New Centroids:
+                    - C1: (2,2) → **(1.5, 1.5)**
+                    - C2: (9,9) → **(8.5, 8.5)**
+                    
+                    **Centroids moved!** → Continue to next iteration
+                </textarea>
+                <aside class="notes">
+                    Show that centroids are just averages. The movement indicates we haven't converged yet. In practice, we'd continue iterating.
+                </aside>
+            </section>
+
+            <!-- Slide 16: Visual Example -->
+            <section data-markdown>
+                <textarea data-template>
+                    ## K-means Clustering: Visual Result
+                    
+                    <div class="chart-container">
+                        <img src="https://ppl-ai-code-interpreter-files.s3.amazonaws.com/web/direct-files/10b929247a9aa60a459097d92ffc5aff/bc79cae7-65ed-4f39-bef4-c3e37492db6d/1df04dd5.png" alt="K-means clustering result showing four distinct clusters with their centroids">
+                    </div>
+
+                    ### Key Observations:
+                    - Each cluster has a distinct **color**
+                    - **Black X** marks show the final centroids
+                    - Clusters are **well-separated** and **compact** & Each point belongs to **exactly one** cluster
+                </textarea>
+                <aside class="notes">
+                    Point out the visual features. Ask students what they notice about cluster shapes (roughly circular). This motivates discussion of when K-means works well.
+                </aside>
+            </section>
+
+            <!-- Slide 17: Distance Metrics Deep Dive -->
+            <section data-markdown>
+                <textarea data-template>
+                    ## Distance Metrics in Detail
+                    
+                    ### Euclidean Distance (Most Common)
+                    <div class="math-formula">
+                    $$d_{Euclidean}(x,y) = \sqrt{\sum_{i=1}^{d} (x_i - y_i)^2}$$
+                    </div>
+                    
+                    ### Properties:
+                    - **Symmetric**: $d(x,y) = d(y,x)$
+                    - **Non-negative**: $d(x,y) \geq 0$
+                    - **Identity**: $d(x,x) = 0$
+                    - **Triangle inequality**: $d(x,z) \leq d(x,y) + d(y,z)$
+                    
+                    <div class="example-box">
+                    <strong>Exercise</strong>: Calculate Euclidean distance between (3,4) and (6,8)
+                    
+                    **Solution**: $d = \sqrt{(6-3)^2 + (8-4)^2} = \sqrt{9 + 16} = \sqrt{25} = 5$
+                    </div>
+                </textarea>
+                <aside class="notes">
+                    Emphasize that these properties make Euclidean distance a proper metric. Have students work the exercise. Mention that other metrics can be used in K-means.
+                </aside>
+            </section>
+
+            <!-- Slide 18: Choosing K - The Elbow Method -->
+            <section data-markdown>
+                <textarea data-template>
+                    ## Choosing the Number of Clusters (k)
+                    
+                    ### The Challenge:
+                    How do we choose $k$ when we don't know the "true" number of clusters?
+                    
+                    ### The Elbow Method:
+                    1. Run K-means for different values of $k$ (1, 2, 3, ...)
+                    2. Calculate WCSS for each $k$
+                    3. Plot WCSS vs $k$
+                    4. Look for the "elbow" - where improvement starts to level off
+                    
+                    <div class="chart-container">
+                        <img src="https://ppl-ai-code-interpreter-files.s3.amazonaws.com/web/direct-files/10b929247a9aa60a459097d92ffc5aff/c67f6a66-168a-41e9-8fba-ffd426c1fc12/c1379f9d.png" alt="Elbow Method for Optimal K Selection">
+                    </div>
+                    
+                    **Optimal k ≈ 4** (at the elbow point)
+                </textarea>
+                <aside class="notes">
+                    Explain why WCSS always decreases with more clusters. The elbow represents good trade-off between fit and complexity. Point out the marked elbow at k=4.
+                </aside>
+            </section>
+
+            <!-- Slide 19: K-means++ Initialization -->
+            <section data-markdown>
+                <textarea data-template>
+                    ## K-means++ Initialization
+                    
+                    ### The Problem with Random Initialization:
+                    - Can lead to **poor local optima**
+                    - **Sensitive** to initial centroid placement
+                    - May require **multiple runs**
+                    
+                    ### K-means++ Solution:
+                    <div class="algorithm-box">
+                    <span class="step-number">1</span> Choose first centroid <strong>randomly</strong>
+                    
+                    <span class="step-number">2</span> For each remaining centroid:
+                    - Calculate distance from each point to **nearest existing centroid**
+                    - Choose next centroid with probability **proportional to squared distance**
+                    
+                    <span class="step-number">3</span> Repeat until $k$ centroids are chosen
+                    </div>
+                    
+                    ### Benefits:
+                    - Better **initial coverage** & More **consistent results** & **Provably better** expected performance
+                </textarea>
+                <aside class="notes">
+                    Emphasize that this is a smarter way to initialize. The probability weighting ensures centroids are spread out. This is the default in most implementations.
+                </aside>
+            </section>
+
+            <!-- Slide 20: Convergence Properties -->
+            <section data-markdown>
+                <textarea data-template>
+                    ## Convergence Properties
+                    
+                    ### Convergence Guarantee:
+                    <div class="definition-box">
+                    <strong>Theorem</strong>: K-means algorithm always converges in a <strong>finite number of steps</strong>.
+                    </div>
+                    
+                    ### Why does it converge? 
+                    1. **WCSS is non-negative** and has a lower bound (0)
+                    2. **Each iteration decreases or maintains WCSS**
+                    3. **Finite number of possible partitions**
+                    4. Therefore, **must reach a stable partition**
+                    
+                    ### Convergence Criteria:
+                    - **Centroids don't move**: $||\mu_j^{new} - \mu_j^{old}|| &lt; \epsilon$
+                    - **No assignment changes**: Cluster memberships stable
+                    - **WCSS change is small**: $|WCSS^{new} - WCSS^{old}| &lt; \epsilon$
+                    - **Maximum iterations reached**: Practical stopping condition
+                </textarea>
+                <aside class="notes">
+                    This is an important theoretical result. Explain that "finite" doesn't mean "fast" - could take many iterations. In practice, usually converges quickly.
+                </aside>
+            </section>
+
+            <!-- PART 3: Mathematical Foundations -->
+            
+            <!-- Slide 21: Mathematical Formulation -->
+            <section data-markdown>
+                <textarea data-template>
+                    # Part 3: Mathematical Foundations
+                    
+                    ## Objective Function
+                    
+                    ### K-means as an Optimization Problem:
+                    
+                    **Minimize** the Within-Cluster Sum of Squares (WCSS):
+                    
+                    <div class="math-formula">
+                    $$J = \sum_{i=1}^{k} \sum_{x \in C_i} ||x - \mu_i||^2$$
+                    </div>
+                    
+                    **Subject to**:
+                    - $C_i \cap C_j = \emptyset$ for $i \neq j$ (disjoint clusters)
+                    - $\bigcup_{i=1}^{k} C_i = X$ (complete partition)
+                    
+                    ### Decision Variables:
+                    - **Cluster assignments**: $c_1, c_2, ..., c_n$
+                    - **Centroids**: $\mu_1, \mu_2, ..., \mu_k$
+                </textarea>
+                <aside class="notes">
+                    This formalizes K-means as an optimization problem. Emphasize that we're minimizing total squared distances. This is a hard combinatorial problem in general.
+                </aside>
+            </section>
+
+            <!-- Slide 22: Lloyd's Algorithm Derivation -->
+            <section data-markdown>
+                <textarea data-template>
+                    ## Lloyd's Algorithm: Mathematical Derivation
+                    
+                    ### Coordinate Descent Approach:
+                    Since joint optimization is NP-hard, we **alternate** between:
+                    
+                    ### Step 1: Fix centroids, optimize assignments
+                    For fixed $\mu_j$, minimize $J$ by assigning each $x_i$ to nearest centroid:
+                    
+                    <div class="math-formula">
+                    $$c_i^* = \arg\min_j ||x_i - \mu_j||^2$$
+                    </div>
+                    
+                    ### Step 2: Fix assignments, optimize centroids
+                    For fixed assignments, minimize $J$ by setting:
+                    
+                    <div class="math-formula">
+                    $$\frac{\partial J}{\partial \mu_j} = -2\sum_{x_i \in C_j} (x_i - \mu_j) = 0$$
+                    </div>
+                    
+                    **Solution**: $\mu_j^* = \frac{1}{|C_j|} \sum_{x_i \in C_j} x_i$ (cluster mean)
+                </textarea>
+                <aside class="notes">
+                    This shows why K-means works: each step is optimal given the other variables. The derivative calculation shows why we take the mean.
+                </aside>
+            </section>
+
+            <!-- Slide 23: Convergence Proof Outline -->
+            <section data-markdown>
+                <textarea data-template>
+                    ## Convergence Proof Outline
+                    
+                    ### Proof Strategy:
+                    
+                    <div class="definition-box">
+                    <strong>Theorem</strong>: Lloyd's algorithm converges to a local minimum of the WCSS objective function in finite steps.
+                    </div>
+                    
+                    ### Key Ideas:
+                    
+                    **1. Monotonicity**: $J^{(t+1)} \leq J^{(t)}$ for all iterations $t$
+                    - Assignment step: Choose best assignment → $J$ decreases or stays same
+                    - Update step: Choose optimal centroids → $J$ decreases or stays same
+                    
+                    **2. Lower Bound**: $J \geq 0$ (sum of squared distances)
+                    
+                    **3. Finite State Space**: Only finitely many possible partitions
+                    
+                    **4. No Cycles**: Since $J$ is monotonic and finite, cannot revisit same partition with higher $J$
+                    
+                    **∴ Convergence in finite steps** ✓
+                </textarea>
+                <aside class="notes">
+                    This is a sketch of the proof. The key insight is that we have a monotonic sequence bounded below in a finite space. Note: convergence to global optimum is not guaranteed.
+                </aside>
+            </section>
+
+            <!-- Slide 24: Computational Complexity -->
+            <section data-markdown>
+                <textarea data-template>
+                    ## Computational Complexity
+                    
+                    ### Time Complexity Analysis:
+                    
+                    **Per Iteration**:
+                    - **Assignment Step**: $O(nkd)$
+                      - $n$ points &times; $k$ centroids &times; $d$ dimensions
+                    - **Update Step**: $O(nd)$
+                      - Calculate mean for each cluster
+                    
+                    **Total**: $O(tknd)$ where $t$ = number of iterations
+                    
+                    ### Space Complexity: $O((n+k)\cdot d)$
+                    - Store $n$ data points and $k$ centroids in $d$ dimensions
+                    
+                    ### Practical Considerations:
+| 1. **$t$ is usually small** (often < 100). | 3. **Linear in $n$** → scales well with data size |
+|---------------------------------------------|--------------------------------------------------|
+| 2. **Linear in $k$** → efficient for reasonable $k$. | 4. **Can be parallelized** easily                  |
+                </textarea>
+                <aside class="notes">
+                    Emphasize that K-means is computationally efficient. The linear scaling with n is important for big data. Most of the work is in distance calculations.
+                </aside>
+            </section>
+
+            <!-- Slide 25: Advantages and Limitations -->
+            <section data-markdown>
+                <textarea data-template>
+                    ## Advantages and Limitations <br>
+                    
+                    <div class="two-column">
+                        <div class="column">
+                            ✅ Advantages<br>
+                            - <strong>Simple</strong> to understand and implement<br>
+                            - <strong>Computationally efficient</strong><br>
+                            - <strong>Guaranteed convergence</strong><br>
+                            - <strong>Works well</strong> for spherical clusters<br>
+                            - <strong>Scales</strong> to large datasets<br>
+                            - <strong>Deterministic</strong> results (given initialization)<br>
+                        </div>
+                        <div class="column">
+                            ❌ Limitations<br>
+                            - <strong>Must specify $k$</strong> in advance<br>
+                            - <strong>Sensitive to initialization</strong><br>
+                            - <strong>Assumes spherical clusters</strong><br>
+                            - <strong>Sensitive to outliers</strong><br>
+                            - <strong>Struggles with</strong> varying cluster sizes<br>
+                            - <strong>Local optima</strong> (not global)<br>
+                        </div>
+                    </div>
+                    
+                    ### When to Use K-means:<br>
+                    - Clusters are roughly **spherical** and **similar sized**<br>
+                    - You have a **reasonable guess** for $k$<br>
+                    - **Computational efficiency** is important<br>
+                    - Data is **numerical** (continuous features)<br>
+                </textarea>
+                <aside class="notes">
+                    This balanced view helps students understand when K-means is appropriate. The spherical assumption is key - it fails on elongated or irregular clusters.
+                </aside>
+            </section>
+
+            <!-- Slide 26: When K-means Fails -->
+            <section data-markdown>
+                <textarea data-template>
+                    ## When K-means Fails: Examples
+                    
+                    ### 1. Non-Spherical Clusters
+                    - **Elongated clusters** (elliptical shapes)
+                    - **Moon-shaped** or curved clusters
+                    - **Nested clusters** (one inside another)
+                    
+                    ### 2. Different Cluster Sizes
+                    - K-means **assumes equal cluster sizes**
+                    - Large clusters may be **split incorrectly**
+                    - Small clusters may be **absorbed**
+                    
+                    ### 3. Outliers
+                    - **Single outliers** can pull centroids away
+                    - **Sensitive to extreme values**
+                    - May create **artificial clusters**
+                    
+                    <div class="example-box">
+                    <strong>Alternative Algorithms</strong>:
+                    *DBSCAN (arbitrary shapes, finds outliers). *Gaussian Mixture Models (elliptical clusters). *Hierarchical Clustering (No need to specify $k$)
+                    </div>
+                </textarea>
+                <aside class="notes">
+                    Show examples on board if possible. This helps students understand the limitations and when to consider alternatives. DBSCAN is particularly good for irregular shapes.
+                </aside>
+            </section>
+
+            <!-- PART 4: Applications and Examples -->
+            
+            <!-- Slide 27: Real-World Applications -->
+            <section data-markdown>
+                <textarea data-template>
+                    # Part 4: Applications and Examples
+                                        
+                    ### Business &amp; Marketing
+                    - **Customer Segmentation**: Group customers by behavior
+                    - **Market Basket Analysis**: Find product associations
+                    - **Recommendation Systems**: Group similar users/items
+                    
+                    ### Science &amp; Research  
+                    - **Gene Sequence Analysis**: Identify related genetic patterns
+                    - **Image Segmentation**: Partition medical images
+                    - **Anomaly Detection**: Find unusual patterns in data
+                    
+                    ### Technology
+                    - **Document Clustering**: Organize text by topic
+                    - **Computer Vision**: Object recognition and tracking
+                    - **Data Compression**: Reduce dimensionality
+                    
+                    <div class="highlight">
+                    <strong>Key Insight</strong>: K-means is often a <strong>preprocessing step</strong> for other machine learning tasks
+                    </div>
+                </textarea>
+                <aside class="notes">
+                    Connect to students' interests and experiences. Ask if they can think of other applications. Emphasize that clustering is often part of a larger pipeline.
+                </aside>
+            </section>
+
+            <!-- Slide 28: Case Study Example -->
+            <section data-markdown>
+                <textarea data-template>
+                    ## Case Study: Customer Segmentation
+
+                    An e-commerce company wants to segment customers for targeted marketing.
+                    
+                    ### Data Features:
+                    - **Annual spending** ($)
+                    - **Purchase frequency** (orders/year)
+                    - **Average order value** ($)
+                    - **Days since last purchase**
+                    
+                    ### K-means Application:
+                    1. **Normalize** features (different scales)
+                    2. **Choose $k$** using elbow method
+                    3. **Apply K-means** clustering
+                    4. **Interpret** clusters as customer segments
+                    
+                    ### Possible Segments:
+| **High-value frequent**   | **High-value infrequent**   | **Low-value frequent**        | **Low-value infrequent** |
+|---------------------------|-----------------------------|-------------------------------|---------------------------|
+| Premium customers         | Occasional big spenders     | Budget-conscious regular customers | At-risk customers       |
+
+                </textarea>
+                <aside class="notes">
+                    This concrete example shows the full workflow. Emphasize the importance of feature normalization when variables have different scales.
+                </aside>
+            </section>
+
+            <!-- Slide 29: Implementation Considerations -->
+            <section data-markdown>
+                <textarea data-template>
+                    ## Implementation Considerations
+                    
+                    ### Data Preprocessing:
+                    - **Feature scaling**: Normalize different units/scales
+                    - **Handle missing values**: Imputation or removal
+                    - **Outlier detection**: May need preprocessing
+                    
+                    ### Algorithm Choices:
+                    - **Initialization**: Use K-means++ (not random)
+                    - **Distance metric**: Euclidean vs. others
+                    - **Convergence criteria**: Balance accuracy vs. speed
+                    
+                    ### Validation &amp; Evaluation:
+                    - **Elbow method**: Choose appropriate $k$
+                    - **Silhouette analysis**: Measure cluster quality
+                    - **Domain knowledge**: Do clusters make sense?
+                    
+                    <div class="example-box">
+                    <strong>Python Example</strong>:
+                    ```python
+                    from sklearn.cluster import KMeans
+                    kmeans = KMeans(n_clusters=3, init='k-means++')
+                    clusters = kmeans.fit_predict(data)
+                    ```
+                    </div>
+                </textarea>
+                <aside class="notes">
+                    These are practical considerations for real implementations. The code example shows how simple it is to use K-means in practice, but preprocessing is crucial.
+                </aside>
+            </section>
+
+            <!-- PART 5: Exercises and Homework -->
+            
+            <!-- Slide 30: In-Class Exercises -->
+            <section data-markdown>
+                <textarea data-template>
+                    # Part 5: Exercises and Homework
+                    
+                    ## In-Class Exercises
+                    
+                    <div class="exercise-box">
+                    <strong>Exercise 1</strong>: Manual K-means  
+                    Apply K-means (k=2) to points: (1,1), (2,2), (5,5), (6,6)  
+                    Initial centroids: (1,1) and (5,5)
+                    
+                    *Work through 2 iterations by hand*
+                    </div>
+                    
+                    <div class="exercise-box">
+                    <strong>Exercise 2</strong>: WCSS Calculation  
+                    Given clustering: C₁ = {(1,2), (2,3)}, C₂ = {(5,6), (6,7)}  
+                    Calculate the total WCSS
+                    
+                    *Hint: Find centroids first, then distances*
+                    </div>
+                    
+                    <div class="exercise-box">
+                    <strong>Exercise 3</strong>: Elbow Method  
+                    Given WCSS values: k=1: 100, k=2: 50, k=3: 30, k=4: 25, k=5: 23  
+                    What is the optimal k? Justify your answer.
+                    </div>
+                    
+                    **Time**: 15 minutes, then we will discuss the solutions
+                </textarea>
+                <aside class="notes">
+                    Give students time to work on these. Exercise 1 reinforces the algorithm steps. Exercise 2 practices the objective function. Exercise 3 tests elbow method understanding.
+                </aside>
+            </section>
+
+            <!-- Slide 31: Homework Assignment -->
+            <section data-markdown>
+                <textarea data-template>
+                    ## Homework Assignment
+                    
+                    ### Problem 1: Implementation (40 points)
+                    Implement K-means algorithm in Python without using built-in clustering libraries.
+                    
+                    **Requirements**:
+                    - K-means++ initialization
+                    - Convergence checking
+                    - WCSS calculation
+                    - Test on provided dataset
+                    
+                    ### Problem 2: Real Data Analysis (40 points)
+                    Apply K-means to the Iris or Wine dataset:
+                    - Use elbow method to choose optimal k
+                    - Compare with known class labels
+                    - Analyze and interpret results
+                    
+                    ### Problem 3: Theoretical Analysis (20 points)
+                    **Part A**: Prove that the centroid update step minimizes WCSS for fixed assignments  
+                    **Part B**: Explain why K-means may not find the global optimum
+                </textarea>
+                <aside class="notes">
+                    This homework combines implementation, application, and theory. Emphasize that they shouldn't use sklearn.cluster.KMeans for Problem 1 - they need to implement it themselves.
+                </aside>
+            </section>
+
+            <!-- Slide 32: Further Reading & Next Steps -->
+            <section data-markdown>
+                <textarea data-template>
+                    ## Further Reading &amp; Next Steps
+                    
+                    ### Recommended Reading:
+                    - **Hastie, Tibshirani &amp; Friedman**: "Elements of Statistical Learning" (Ch. 14.3)
+                    - **Murphy**: "Machine Learning: A Probabilistic Perspective" (Ch. 25)
+                    - **Original Lloyd Paper** (1982): "Least squares quantization in PCM"
+                    
+                    ### Extensions to Explore:
+                    - **Soft clustering**: Fuzzy K-means, Gaussian Mixture Models
+                    - **Other distance metrics**: Manhattan, Cosine similarity
+                    - **Hierarchical clustering**: Agglomerative, Divisive
+                    - **Density-based clustering**: DBSCAN, OPTICS
+                    
+                    ### Next in Course:
+                    - **Hierarchical Clustering** 
+                    - **Gaussian Mixture Models** 
+                    - **Dimensionality Reduction**
+                    
+                    **Office Hours**: Wednesdays 9:00-11:00 and 13:00-15:00, Room Lab. IA (4º Piso - Edificio Fundadores)
+                </textarea>
+                <aside class="notes">
+                    End with resources for deeper learning. Mention that clustering is just the beginning of unsupervised learning. Encourage questions in office hours.
+                </aside>
+            </section>
+
+            <!-- Thank You Slide -->
+            <section data-markdown class="title-slide">
+                <textarea data-template>
+                    # Thank You!
+                    
+                    ## Questions &amp; Discussion
+                    
+                    ### Key Takeaways:
+                    - K-means finds **spherical clusters** by **minimizing WCSS**
+                    - **Two-step iterative** algorithm guaranteed to **converge**
+                    - **Choosing k** requires domain knowledge and validation methods
+                    - **Preprocessing** and **initialization** matter for good results
+                    
+                    ---
+                    
+                    **Homework Due**: Next class
+                    **Next Lecture**: Hierarchical Clustering
+                    
+                    *"Data is not information, information is not knowledge, knowledge is not understanding."* — Clifford Stoll
+                </textarea>
+                <aside class="notes">
+                    Summarize key points. Open floor for questions. Remind about homework deadline. The quote emphasizes that clustering is about understanding, not just computation.
+                </aside>
+            </section>
+
+        </div>
+    </div>
+
+    <!-- Reveal.js JavaScript -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.1/reveal.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.1/plugin/markdown/markdown.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.1/plugin/highlight/highlight.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.1/plugin/notes/notes.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.1/plugin/math/math.min.js"></script>
+
+    <script>
+        // Configure MathJax
+        window.MathJax = {
+            tex: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']],
+                displayMath: [['$$', '$$'], ['\\[', '\\]']],
+                processEscapes: true,
+                processEnvironments: true
+            },
+            options: {
+                skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre']
+            }
+        };
+
+        // Initialize Reveal.js with 16:9 configuration
+        Reveal.initialize({
+            width: 1280,
+            height: 720,
+            margin: 0.04,
+            minScale: 0.8,
+            maxScale: 1.2,
+            theme: 'white',
+            transition: 'slide',
+            slideNumber: true,
+            hash: true,
+            controls: true,
+            progress: true,
+            center: false,
+            
+            // Plugin configuration
+            plugins: [
+                RevealMarkdown,
+                RevealHighlight,
+                RevealNotes,
+                RevealMath.KaTeX
+            ],
+            
+            // Markdown plugin settings
+            markdown: {
+                smartypants: true
+            },
+            
+            // Math plugin settings
+            math: {
+                mathjax: 'https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js',
+                config: 'TeX-AMS_HTML-full',
+                TeX: {
+                    Macros: {
+                        R: '\\mathbb{R}',
+                        set: ['\\left\\{#1 \\; ; \\; #2\\right\\}', 2]
+                    }
+                }
+            },
+            
+            // Keyboard shortcuts
+            keyboard: {
+                13: 'next', // Enter key
+                32: 'next', // Spacebar
+                37: 'prev', // Left arrow
+                39: 'next', // Right arrow
+                78: function() { // 'n' key for notes
+                    RevealNotes.open();
+                }
+            }
+        });
+
+        // Custom event handlers
+        Reveal.on('slidechanged', event => {
+            // Update progress indicator
+            const progress = document.querySelector('.reveal .progress span');
+            if (progress) {
+                const current = event.indexh + 1;
+                const total = Reveal.getTotalSlides();
+                progress.style.transform = `scaleX(${current / total})`;
+            }
+        });
+
+        // Print-friendly CSS
+        Reveal.on('pdf-ready', () => {
+            document.body.classList.add('print-pdf');
+        });
+    </script>
+</body>
+</html>
